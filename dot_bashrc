@@ -1,6 +1,6 @@
 export EDITOR='nvim'
 
-alias ls='exa '
+#alias ls='exa '
 alias ll='exa -l -h --git'
 alias la='exa -a'
 alias lt='exa -T -L 2'
