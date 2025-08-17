@@ -99,20 +99,6 @@ vim.keymap.set(
 -- Visual block mode
 vim.keymap.set("n", "<leader>v", "<C-v>", { desc = "Visual block mode" })
 
--- Window navigation (similar to LunarVim's which-key mappings)
-
-vim.keymap.set("n", "<leader>h", "<C-w>h", { desc = "Go to left window" })
-vim.keymap.set("n", "<leader>j", "<C-w>j", { desc = "Go to down window" })
-vim.keymap.set("n", "<leader>k", "<C-w>k", { desc = "Go to up window" })
-vim.keymap.set("n", "<leader>l", "<C-w>l", { desc = "Go to right window" })
-
--- Keep window management commands under <leader>w for more complex operations
-vim.keymap.set("n", "<leader>ws", "<cmd>split<cr>", { desc = "[W]indow [S]plit horizontal" })
-vim.keymap.set("n", "<leader>wv", "<cmd>vsplit<cr>", { desc = "[W]indow [V]split vertical" })
-vim.keymap.set("n", "<leader>wc", "<cmd>close<cr>", { desc = "[W]indow [C]lose" })
-vim.keymap.set("n", "<leader>wo", "<cmd>only<cr>", { desc = "[W]indow [O]nly (close others)" })
-vim.keymap.set("n", "<leader>w=", "<C-w>=", { desc = "[W]indow [=]equalize" })
-
 -- Window resizing (optional)
 vim.keymap.set("n", "<leader>w+", "<cmd>resize +5<cr>", { desc = "[W]indow [+]increase height" })
 vim.keymap.set("n", "<leader>w-", "<cmd>resize -5<cr>", { desc = "[W]indow [-]decrease height" })
@@ -172,28 +158,6 @@ vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "[E]xplorer
 vim.keymap.set("n", "<leader>u", "<cmd>UndotreeToggle<CR>", { desc = "[U]ndo tree" })
 vim.keymap.set("n", "<leader>n", "<cmd>GlobalNote<CR>", { desc = "[N]otes" })
 
--- Comment out line
-vim.keymap.set("n", "<leader>/", function()
-	require("Comment.api").toggle.linewise.current()
-end, { desc = "Toggle comment line" })
-
--- Comment out Section
-vim.keymap.set("v", "<leader>/", function()
-	local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
-	vim.api.nvim_feedkeys(esc, "nx", false)
-	require("Comment.api").toggle.linewise(vim.fn.visualmode())
-end, { desc = "Toggle comment selection" })
-
--- Block commenting with <leader>? (optional)
-vim.keymap.set("n", "<leader>?", function()
-	require("Comment.api").toggle.blockwise.current()
-end, { desc = "Toggle block comment" })
-
-vim.keymap.set("v", "<leader>?", function()
-	local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
-	vim.api.nvim_feedkeys(esc, "nx", false)
-	require("Comment.api").toggle.blockwise(vim.fn.visualmode())
-end, { desc = "Toggle block comment selection" })
 
 -- Clear search highlight
 vim.keymap.set("n", "<leader>nh", "<cmd>nohlsearch<CR>", { desc = "[N]o [H]ighlight" })
@@ -314,21 +278,6 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagn
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-
--- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
-
--- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
---
---  See `:help wincmd` for a list of all window commands
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
 vim.keymap.set("n", "<leader>gc", function()
 	vim.cmd("terminal git commit")
