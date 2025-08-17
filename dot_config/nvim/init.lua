@@ -127,10 +127,70 @@ vim.keymap.set("n", "<leader>H", "<cmd>nohlsearch<CR>", { desc = "Clear search h
 -- ===========================
 -- WHICH-KEY INTEGRATION
 -- ===========================
--- Update your which-key spec to include these groups:
--- Add to the which-key spec table in the plugin configuration:
--- { "<leader>w", group = "[W]indow" },
--- { "<leader>t", group = "[T]erminal" }, -- if you add terminal functionality
+-- File operations
+--
+
+vim.keymap.set("n", "<leader>ff", function()
+	require("telescope.builtin").find_files()
+end, { desc = "[F]ind [F]iles" })
+
+vim.keymap.set("n", "<leader>fw", function()
+	require("telescope.builtin").grep_string()
+end, { desc = "[F]ind current [W]ord" })
+
+-- Format
+vim.keymap.set("n", "<leader>fm", function()
+	require("conform").format({ async = true, lsp_format = "fallback" })
+end, { desc = "[F]or[m]at buffer" })
+
+-- Terminal mappings (organize under <leader>t)
+vim.keymap.set("n", "<leader>tf", "<cmd>1ToggleTerm<cr>", { desc = "[T]erminal [F]loating" })
+vim.keymap.set(
+	"n",
+	"<leader>th",
+	"<cmd>2ToggleTerm size=10 direction=horizontal<cr>",
+	{ desc = "[T]erminal [H]orizontal" }
+)
+vim.keymap.set("n", "<leader>tv", "<cmd>3ToggleTerm size=30 direction=vertical<cr>", { desc = "[T]erminal [V]ertical" })
+vim.keymap.set("n", "<leader>tn", "<cmd>4ToggleTerm direction=tab<cr>", { desc = "[T]erminal [N]ew tab" })
+
+-- Window management (organize under <leader>w)
+vim.keymap.set("n", "<leader>h", "<C-w>h", { desc = "Window [H]left" })
+vim.keymap.set("n", "<leader>j", "<C-w>j", { desc = "Window [J]down" })
+vim.keymap.set("n", "<leader>k", "<C-w>k", { desc = "Window [K]up" })
+vim.keymap.set("n", "<leader>l", "<C-w>l", { desc = "Winndow [L]right" })
+vim.keymap.set("n", "<leader>ws", "<cmd>split<cr>", { desc = "[W]indow [S]plit horizontal" })
+vim.keymap.set("n", "<leader>wv", "<cmd>vsplit<cr>", { desc = "[W]indow [V]split vertical" })
+vim.keymap.set("n", "<leader>wc", "<cmd>close<cr>", { desc = "[W]indow [C]lose" })
+
+-- File management
+vim.keymap.set("n", "<leader>fs", "<cmd>w<CR>", { desc = "[F]ile [S]ave" })
+vim.keymap.set("n", "<leader>fq", "<cmd>q<CR>", { desc = "[F]ile [Q]uit" })
+
+-- Quick access
+vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "[E]xplorer" })
+vim.keymap.set("n", "<leader>u", "<cmd>UndotreeToggle<CR>", { desc = "[U]ndo tree" })
+vim.keymap.set("n", "<leader>n", "<cmd>GlobalNote<CR>", { desc = "[N]otes" })
+
+-- Clear search highlight
+vim.keymap.set("n", "<leader>nh", "<cmd>nohlsearch<CR>", { desc = "[N]o [H]ighlight" })
+
+-- System clipboard operations
+vim.keymap.set({ "n", "v" }, "<leader>y", '"+y', { desc = "[Y]ank to system clipboard" })
+vim.keymap.set("n", "<leader>Y", '"+Y', { desc = "[Y]ank line to system clipboard" })
+
+-- Delete to void register
+vim.keymap.set({ "n", "v" }, "<leader>d", '"_d', { desc = "[D]elete to void register" })
+
+-- Replace word under cursor
+vim.keymap.set("n", "<leader>rw", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>", { desc = "[R]eplace [W]ord" })
+
+-- Git operations (if you add gitsigns later)
+-- vim.keymap.set("n", "<leader>gs", ":Gitsigns stage_hunk<CR>", { desc = "[G]it [S]tage hunk" })
+-- vim.keymap.set("n", "<leader>gr", ":Gitsigns reset_hunk<CR>", { desc = "[G]it [R]eset hunk" })
+
+-- Database UI (if you have it)
+vim.keymap.set("n", "<leader>`", ":DBUIToggle<CR>", { desc = "Database UI" })
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
@@ -246,6 +306,18 @@ vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left wind
 vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+
+vim.keymap.set("n", "<leader>gc", function()
+	vim.cmd("terminal git commit")
+end, { desc = "Git commit" })
+
+vim.keymap.set("n", "<leader>gp", function()
+	vim.cmd("terminal git push")
+end, { desc = "Git push" })
+
+vim.keymap.set("n", "<leader>gl", function()
+	vim.cmd("terminal git log --oneline")
+end, { desc = "Git log" })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -365,6 +437,23 @@ require("lazy").setup({
 	--
 	--
 
+	{
+		"kdheepak/lazygit.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+		},
+		config = function()
+			vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
+		end,
+	},
+
+	-- ===============================================
+	-- Method 3: Simple terminal command (SIMPLEST)
+	-- Or just use a simple terminal command:
+
+	-- vim.keymap.set("n", "<leader>gg", function()
+	--   vim.cmd("terminal lazygit")
+	-- end, { desc = "LazyGit" })
 	{
 		"akinsho/toggleterm.nvim",
 		version = "*",
@@ -1351,3 +1440,25 @@ require("lazy").setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+--
+--
+
+-- Wait for which-key to load, then configure it
+vim.api.nvim_create_autocmd("User", {
+	pattern = "VeryLazy",
+	callback = function()
+		local wk = require("which-key")
+
+		-- Register key groups for better organization
+		wk.add({
+			{ "<leader>f", desc = "[F]ind/Format" },
+			{ "<leader>s", desc = "[S]earch" },
+			{ "<leader>t", desc = "[T]erminal/Toggle" },
+			{ "<leader>w", desc = "[W]indow" },
+			{ "<leader>g", desc = "[G]it" },
+			{ "<leader>d", desc = "[D]elete" },
+			{ "<leader>c", desc = "[C]ode" },
+			{ "<leader>h", desc = "Git [H]unk" },
+		})
+	end,
+})
