@@ -100,15 +100,24 @@ vim.keymap.set(
 vim.keymap.set("n", "<leader>v", "<C-v>", { desc = "Visual block mode" })
 
 -- Window navigation (similar to LunarVim's which-key mappings)
+
 vim.keymap.set("n", "<leader>h", "<C-w>h", { desc = "Go to left window" })
 vim.keymap.set("n", "<leader>j", "<C-w>j", { desc = "Go to down window" })
 vim.keymap.set("n", "<leader>k", "<C-w>k", { desc = "Go to up window" })
 vim.keymap.set("n", "<leader>l", "<C-w>l", { desc = "Go to right window" })
 
--- Window management
-vim.keymap.set("n", "<leader>ws", "<cmd>split<cr>", { desc = "Horizontal split" })
-vim.keymap.set("n", "<leader>wv", "<cmd>vsplit<cr>", { desc = "Vertical split" })
-vim.keymap.set("n", "<leader>wn", "<cmd>new<cr>", { desc = "New blank split" })
+-- Keep window management commands under <leader>w for more complex operations
+vim.keymap.set("n", "<leader>ws", "<cmd>split<cr>", { desc = "[W]indow [S]plit horizontal" })
+vim.keymap.set("n", "<leader>wv", "<cmd>vsplit<cr>", { desc = "[W]indow [V]split vertical" })
+vim.keymap.set("n", "<leader>wc", "<cmd>close<cr>", { desc = "[W]indow [C]lose" })
+vim.keymap.set("n", "<leader>wo", "<cmd>only<cr>", { desc = "[W]indow [O]nly (close others)" })
+vim.keymap.set("n", "<leader>w=", "<C-w>=", { desc = "[W]indow [=]equalize" })
+
+-- Window resizing (optional)
+vim.keymap.set("n", "<leader>w+", "<cmd>resize +5<cr>", { desc = "[W]indow [+]increase height" })
+vim.keymap.set("n", "<leader>w-", "<cmd>resize -5<cr>", { desc = "[W]indow [-]decrease height" })
+vim.keymap.set("n", "<leader>w>", "<cmd>vertical resize +5<cr>", { desc = "[W]indow [>]increase width" })
+vim.keymap.set("n", "<leader>w<", "<cmd>vertical resize -5<cr>", { desc = "[W]indow [<]decrease width" })
 
 -- Buffer navigation
 vim.keymap.set("n", "<leader><TAB>", "<cmd>bnext<CR>", { desc = "Next buffer" })
@@ -724,7 +733,7 @@ require("lazy").setup({
 		opts = {
 			-- delay between pressing a key and opening which-key (milliseconds)
 			-- this setting is independent of vim.o.timeoutlen
-			delay = 0,
+			delay = 1000,
 			icons = {
 				-- set icon mappings to true if you have a Nerd Font
 				mappings = vim.g.have_nerd_font,
