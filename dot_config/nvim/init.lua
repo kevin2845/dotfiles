@@ -108,6 +108,49 @@ vim.keymap.set("n", "<leader>w<", "<cmd>vertical resize -5<cr>", { desc = "[W]in
 -- Buffer navigation
 vim.keymap.set("n", "<leader><TAB>", "<cmd>bnext<CR>", { desc = "Next buffer" })
 
+-- Cycle through buffers/tabs
+vim.keymap.set("n", "<leader><TAB>", "<cmd>BufferLineCycleNext<CR>", { desc = "Next tab" })
+vim.keymap.set("n", "<S-TAB>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Previous tab" })
+
+-- Close buffer/tab
+vim.keymap.set("n", "<leader>c", "<cmd>bdelete<CR>", { desc = "Close tab" })
+
+-- Additional buffer management
+vim.keymap.set("n", "<leader>tc", "<cmd>bdelete<CR>", { desc = "[T]ab [C]lose" })
+vim.keymap.set("n", "<leader>tC", "<cmd>BufferLineCloseOthers<CR>", { desc = "[T]ab [C]lose others" })
+vim.keymap.set("n", "<leader>tr", "<cmd>BufferLineCloseRight<CR>", { desc = "[T]ab Close [R]ight" })
+vim.keymap.set("n", "<leader>tl", "<cmd>BufferLineCloseLeft<CR>", { desc = "[T]ab Close [L]eft" })
+
+-- Pick a buffer
+vim.keymap.set("n", "<leader>tp", "<cmd>BufferLinePick<CR>", { desc = "[T]ab [P]ick" })
+
+-- Move to buffer by position
+vim.keymap.set("n", "<leader>1", "<cmd>BufferLineGoToBuffer 1<CR>", { desc = "Go to tab 1" })
+vim.keymap.set("n", "<leader>2", "<cmd>BufferLineGoToBuffer 2<CR>", { desc = "Go to tab 2" })
+vim.keymap.set("n", "<leader>3", "<cmd>BufferLineGoToBuffer 3<CR>", { desc = "Go to tab 3" })
+vim.keymap.set("n", "<leader>4", "<cmd>BufferLineGoToBuffer 4<CR>", { desc = "Go to tab 4" })
+vim.keymap.set("n", "<leader>5", "<cmd>BufferLineGoToBuffer 5<CR>", { desc = "Go to tab 5" })
+vim.keymap.set("n", "<leader>6", "<cmd>BufferLineGoToBuffer 6<CR>", { desc = "Go to tab 6" })
+vim.keymap.set("n", "<leader>7", "<cmd>BufferLineGoToBuffer 7<CR>", { desc = "Go to tab 7" })
+vim.keymap.set("n", "<leader>8", "<cmd>BufferLineGoToBuffer 8<CR>", { desc = "Go to tab 8" })
+vim.keymap.set("n", "<leader>9", "<cmd>BufferLineGoToBuffer 9<CR>", { desc = "Go to tab 9" })
+vim.keymap.set("n", "<leader>0", "<cmd>BufferLineGoToBuffer -1<CR>", { desc = "Go to last tab" })
+
+-- Move buffers/tabs around
+vim.keymap.set("n", "<leader>t>", "<cmd>BufferLineMoveNext<CR>", { desc = "[T]ab Move right" })
+vim.keymap.set("n", "<leader>t<", "<cmd>BufferLineMovePrev<CR>", { desc = "[T]ab Move left" })
+
+-- Sort buffers
+vim.keymap.set("n", "<leader>tsd", "<cmd>BufferLineSortByDirectory<CR>", { desc = "[T]ab [S]ort by [D]irectory" })
+vim.keymap.set("n", "<leader>tse", "<cmd>BufferLineSortByExtension<CR>", { desc = "[T]ab [S]ort by [E]xtension" })
+vim.keymap.set("n", "<leader>tst", "<cmd>BufferLineSortByTabs<CR>", { desc = "[T]ab [S]ort by [T]abs" })
+
+-- Pin/unpin buffer
+vim.keymap.set("n", "<leader>tP", "<cmd>BufferLineTogglePin<CR>", { desc = "[T]ab [P]in/unpin" })
+
+-- Alternative shortcuts (more like traditional tabs)
+vim.keymap.set("n", "gt", "<cmd>BufferLineCycleNext<CR>", { desc = "Next tab" })
+vim.keymap.set("n", "gT", "<cmd>BufferLineCyclePrev<CR>", { desc = "Previous tab" })
 
 -- No highlight
 vim.keymap.set("n", "<leader>H", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
@@ -392,7 +435,105 @@ require("lazy").setup({
 	-- See `:help gitsigns` to understand what the configuration keys do
 	-- NOTE: Kevin's Plugins!!!
 	--
-	--
+
+	{
+		"akinsho/bufferline.nvim",
+		version = "*",
+		dependencies = "nvim-tree/nvim-web-devicons",
+		config = function()
+			require("bufferline").setup({
+				options = {
+					mode = "buffers", -- set to "tabs" to only show tabpages instead
+					style_preset = require("bufferline").style_preset.default, -- or bufferline.style_preset.minimal,
+					themable = true,
+					numbers = "none", -- | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
+					close_command = "bdelete! %d", -- can be a string | function, | false see "Mouse actions"
+					right_mouse_command = "bdelete! %d", -- can be a string | function | false, see "Mouse actions"
+					left_mouse_command = "buffer %d", -- can be a string | function, | false see "Mouse actions"
+					middle_mouse_command = nil, -- can be a string | function, | false see "Mouse actions"
+					indicator = {
+						icon = "▎", -- this should be omitted if indicator style is not 'icon'
+						style = "icon", -- | 'underline' | 'none',
+					},
+					buffer_close_icon = "󰅖",
+					modified_icon = "●",
+					close_icon = "",
+					left_trunc_marker = "",
+					right_trunc_marker = "",
+					--- name_formatter can be used to change the buffer's label in the bufferline.
+					--- Please note some names can/will break the
+					--- bufferline so use this at your discretion knowing that it has
+					--- some limitations that will *NOT* be fixed.
+					name_formatter = function(buf) -- buf contains:
+						-- name                | str        | the basename of the active file
+						-- path                | str        | the full path of the active file
+						-- bufnr (buffer only) | int        | the number of the active buffer
+						-- buffers (tabs only) | table      | the currently open buffers in the tab
+						-- tabnr (tabs only)   | int        | the "handle" of the tab, can be converted to its ordinal number using: `vim.api.nvim_tabpage_get_number(buf.tabnr)`
+					end,
+					max_name_length = 30,
+					max_prefix_length = 30, -- prefix used when a buffer is de-duplicated
+					truncate_names = true, -- whether or not tab names should be truncated
+					tab_size = 21,
+					diagnostics = "nvim_lsp", -- | "nvim_lsp" | "coc",
+					diagnostics_update_in_insert = false,
+					-- The diagnostics indicator can be set to nil to keep the buffer name highlight but delete the highlighting
+					diagnostics_indicator = function(count, level, diagnostics_dict, context)
+						return "(" .. count .. ")"
+					end,
+					-- NOTE: this will be called a lot so don't do any heavy processing here
+					custom_filter = function(buf_number, buf_numbers)
+						-- filter out filetypes you don't want to see
+						if vim.bo[buf_number].filetype ~= "<i-don't-want-to-see-this>" then
+							return true
+						end
+						-- filter out by buffer name
+						if vim.fn.bufname(buf_number) ~= "<buffer-name-I-don't-want>" then
+							return true
+						end
+						-- filter out based on arbitrary rules
+						-- e.g. filter out vim help files
+						if vim.fn.bufname(buf_number) ~= "" then
+							return true
+						end
+					end,
+					offsets = {
+						{
+							filetype = "NvimTree",
+							text = "File Explorer", -- | function ,
+							text_align = "left", -- | "center" | "right"
+							separator = true,
+						},
+					},
+					color_icons = true, -- | false, -- whether or not to add the filetype icon highlights
+					show_buffer_icons = true, -- | false, -- disable filetype icons for buffers
+					show_buffer_close_icons = true, -- | false,
+					show_close_icon = true, -- | false,
+					show_tab_indicators = true, -- | false,
+					show_duplicate_prefix = true, -- | false, -- whether to show duplicate buffer prefix
+					duplicates_across_groups = true, -- whether to consider duplicate paths in different groups as duplicates
+					persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
+					move_wraps_at_ends = false, -- whether or not the move command "wraps" at the first or last position
+					-- can also be a table containing 2 custom separators
+					-- [focused and unfocused]. eg: { '|', '|' }
+					separator_style = "slant", -- | "slope" | "thick" | "thin" | { 'any', 'any' },
+					enforce_regular_tabs = false, -- | true,
+					always_show_bufferline = true, -- | false,
+					auto_toggle_bufferline = true, -- | false,
+					hover = {
+						enabled = true,
+						delay = 200,
+						reveal = { "close" },
+					},
+					sort_by = "insert_after_current", -- |'insert_at_end' | 'id' | 'extension' | 'relative_directory' | 'directory' | 'tabs' | function(buffer_a, buffer_b)
+					--     -- add custom logic
+					--     return buffer_a.modified > buffer_b.modified
+					-- end
+				},
+			})
+		end,
+	},
+
 	{
 		"numToStr/Comment.nvim",
 		config = function()
@@ -740,6 +881,8 @@ require("lazy").setup({
 				{ "<leader>s", group = "[S]earch" },
 				{ "<leader>t", group = "[T]oggle" },
 				{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+                { "<leader>t", group = "[T]ab" },
+
 			},
 		},
 	},
