@@ -111,10 +111,6 @@ vim.keymap.set("n", "<leader><TAB>", "<cmd>bnext<CR>", { desc = "Next buffer" })
 -- Save file
 vim.keymap.set("n", "<leader>W", "<cmd>w<CR>", { desc = "Save file" })
 
--- Format buffer (will be available when conform.nvim is loaded)
-vim.keymap.set("n", "<leader>F", function()
-	require("conform").format({ async = true, lsp_format = "fallback" })
-end, { desc = "Format buffer" })
 
 -- No highlight
 vim.keymap.set("n", "<leader>H", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
@@ -132,11 +128,6 @@ end, { desc = "[F]ind [F]iles" })
 vim.keymap.set("n", "<leader>fw", function()
 	require("telescope.builtin").grep_string()
 end, { desc = "[F]ind current [W]ord" })
-
--- Format
-vim.keymap.set("n", "<leader>fm", function()
-	require("conform").format({ async = true, lsp_format = "fallback" })
-end, { desc = "[F]or[m]at buffer" })
 
 -- Terminal mappings (organize under <leader>t)
 vim.keymap.set("n", "<leader>tf", "<cmd>1ToggleTerm<cr>", { desc = "[T]erminal [F]loating" })
@@ -157,7 +148,6 @@ vim.keymap.set("n", "<leader>fq", "<cmd>q<CR>", { desc = "[F]ile [Q]uit" })
 vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "[E]xplorer" })
 vim.keymap.set("n", "<leader>u", "<cmd>UndotreeToggle<CR>", { desc = "[U]ndo tree" })
 vim.keymap.set("n", "<leader>n", "<cmd>GlobalNote<CR>", { desc = "[N]otes" })
-
 
 -- Clear search highlight
 vim.keymap.set("n", "<leader>nh", "<cmd>nohlsearch<CR>", { desc = "[N]o [H]ighlight" })
