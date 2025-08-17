@@ -881,8 +881,9 @@ require("lazy").setup({
 				{ "<leader>s", group = "[S]earch" },
 				{ "<leader>t", group = "[T]oggle" },
 				{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
-                { "<leader>t", group = "[T]ab" },
-
+				{ "<leader>t", group = "[T]ab" },
+				{ "<leader>c", desc = "[C]lose tab" }, -- Add explicit mapping
+				{ "<leader><TAB>", desc = "Next tab" }, -- Add explicit mapping
 			},
 		},
 	},
@@ -971,7 +972,7 @@ require("lazy").setup({
 			vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
 			vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
 			vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-			vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+			-- vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
 
 			-- Slightly advanced example of overriding default behavior and theme
 			vim.keymap.set("n", "<leader>b", function()
@@ -1562,6 +1563,12 @@ vim.api.nvim_create_autocmd("User", {
 			{ "<leader>d", desc = "[D]elete" },
 			{ "<leader>c", desc = "[C]ode" },
 			{ "<leader>h", desc = "Git [H]unk" },
+
+            -- Buffer/Tab navigation
+            { "<leader><TAB>", "<cmd>bnext<CR>", desc = "Next Tab"},
+            { "<S-TAB>", "<cmd>bprev<CR>", desc = "Previous Tab"},
+            { "<leader>c", "<cmd>bdelete<CR>", desc = "Close Tab"},
+
 
 			-- Window Navigation
 			{ "<leader>h", "<cmd>wincmd h<cr>", desc = "Left Window" },
