@@ -181,6 +181,29 @@ vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "[E]xplorer
 vim.keymap.set("n", "<leader>u", "<cmd>UndotreeToggle<CR>", { desc = "[U]ndo tree" })
 vim.keymap.set("n", "<leader>n", "<cmd>GlobalNote<CR>", { desc = "[N]otes" })
 
+-- Comment out line
+vim.keymap.set("n", "<leader>/", function()
+	require("Comment.api").toggle.linewise.current()
+end, { desc = "Toggle comment line" })
+
+-- Comment out Section
+vim.keymap.set("v", "<leader>/", function()
+	local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+	vim.api.nvim_feedkeys(esc, "nx", false)
+	require("Comment.api").toggle.linewise(vim.fn.visualmode())
+end, { desc = "Toggle comment selection" })
+
+-- Block commenting with <leader>? (optional)
+vim.keymap.set("n", "<leader>?", function()
+	require("Comment.api").toggle.blockwise.current()
+end, { desc = "Toggle block comment" })
+
+vim.keymap.set("v", "<leader>?", function()
+	local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+	vim.api.nvim_feedkeys(esc, "nx", false)
+	require("Comment.api").toggle.blockwise(vim.fn.visualmode())
+end, { desc = "Toggle block comment selection" })
+
 -- Clear search highlight
 vim.keymap.set("n", "<leader>nh", "<cmd>nohlsearch<CR>", { desc = "[N]o [H]ighlight" })
 
@@ -445,6 +468,34 @@ require("lazy").setup({
 	-- NOTE: Kevin's Plugins!!!
 	--
 	--
+	{
+		"numToStr/Comment.nvim",
+		config = function()
+			require("Comment").setup()
+
+			-- Set up commenting keymaps under <leader>/
+			vim.keymap.set("n", "<leader>/", function()
+				require("Comment.api").toggle.linewise.current()
+			end, { desc = "Toggle comment line" })
+
+			vim.keymap.set("v", "<leader>/", function()
+				local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+				vim.api.nvim_feedkeys(esc, "nx", false)
+				require("Comment.api").toggle.linewise(vim.fn.visualmode())
+			end, { desc = "Toggle comment selection" })
+
+			-- Additional commenting options (optional)
+			vim.keymap.set("n", "<leader>?", function()
+				require("Comment.api").toggle.blockwise.current()
+			end, { desc = "Toggle block comment" })
+
+			vim.keymap.set("v", "<leader>?", function()
+				local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+				vim.api.nvim_feedkeys(esc, "nx", false)
+				require("Comment.api").toggle.blockwise(vim.fn.visualmode())
+			end, { desc = "Toggle block comment selection" })
+		end,
+	},
 
 	{
 		"kdheepak/lazygit.nvim",
@@ -867,13 +918,13 @@ require("lazy").setup({
 			vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
 
 			-- Slightly advanced example of overriding default behavior and theme
-			vim.keymap.set("n", "<leader>/", function()
+			vim.keymap.set("n", "<leader>y", function()
 				-- You can pass additional configuration to Telescope to change the theme, layout, etc.
 				builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
 					winblend = 10,
 					previewer = false,
 				}))
-			end, { desc = "[/] Fuzzily search in current buffer" })
+			end, { desc = "[y] Fuzzily search in current buffer" })
 
 			-- It's also possible to pass additional configuration options.
 			--  See `:help telescope.builtin.live_grep()` for information about particular keys
