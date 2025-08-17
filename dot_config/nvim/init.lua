@@ -62,6 +62,75 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
+--
+-- NOTE: Kevin's keybinds (From ThePrimeagen:
+--
+-- Move selected text up/down
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
+
+-- Fix cursor when appending line
+vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines and maintain cursor position" })
+
+-- Keep cursor in middle for half page up/down
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
+
+-- Paste without overwriting register
+vim.keymap.set("x", "<leader>p", '"_dP', { desc = "Paste without yanking" })
+
+-- Copy to system clipboard
+vim.keymap.set("n", "<leader>y", '"+y', { desc = "Copy to system clipboard" })
+vim.keymap.set("v", "<leader>y", '"+y', { desc = "Copy to system clipboard" })
+vim.keymap.set("n", "<leader>Y", '"+Y', { desc = "Copy line to system clipboard" })
+
+-- Delete to void register
+vim.keymap.set("n", "<leader>d", '"_d', { desc = "Delete to void register" })
+vim.keymap.set("v", "<leader>d", '"_d', { desc = "Delete to void register" })
+
+-- Replace word under cursor
+vim.keymap.set(
+	"n",
+	"<leader>r",
+	":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>",
+	{ desc = "Replace word under cursor" }
+)
+
+-- Visual block mode
+vim.keymap.set("n", "<leader>v", "<C-v>", { desc = "Visual block mode" })
+
+-- Window navigation (similar to LunarVim's which-key mappings)
+vim.keymap.set("n", "<leader>h", "<C-w>h", { desc = "Go to left window" })
+vim.keymap.set("n", "<leader>j", "<C-w>j", { desc = "Go to down window" })
+vim.keymap.set("n", "<leader>k", "<C-w>k", { desc = "Go to up window" })
+vim.keymap.set("n", "<leader>l", "<C-w>l", { desc = "Go to right window" })
+
+-- Window management
+vim.keymap.set("n", "<leader>ws", "<cmd>split<cr>", { desc = "Horizontal split" })
+vim.keymap.set("n", "<leader>wv", "<cmd>vsplit<cr>", { desc = "Vertical split" })
+vim.keymap.set("n", "<leader>wn", "<cmd>new<cr>", { desc = "New blank split" })
+
+-- Buffer navigation
+vim.keymap.set("n", "<leader><TAB>", "<cmd>bnext<CR>", { desc = "Next buffer" })
+
+-- Save file
+vim.keymap.set("n", "<leader>W", "<cmd>w<CR>", { desc = "Save file" })
+
+-- Format buffer (will be available when conform.nvim is loaded)
+vim.keymap.set("n", "<leader>F", function()
+	require("conform").format({ async = true, lsp_format = "fallback" })
+end, { desc = "Format buffer" })
+
+-- No highlight
+vim.keymap.set("n", "<leader>H", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
+
+-- ===========================
+-- WHICH-KEY INTEGRATION
+-- ===========================
+-- Update your which-key spec to include these groups:
+-- Add to the which-key spec table in the plugin configuration:
+-- { "<leader>w", group = "[W]indow" },
+-- { "<leader>t", group = "[T]erminal" }, -- if you add terminal functionality
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
