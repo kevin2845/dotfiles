@@ -108,9 +108,6 @@ vim.keymap.set("n", "<leader>w<", "<cmd>vertical resize -5<cr>", { desc = "[W]in
 -- Buffer navigation
 vim.keymap.set("n", "<leader><TAB>", "<cmd>bnext<CR>", { desc = "Next buffer" })
 
--- Save file
-vim.keymap.set("n", "<leader>W", "<cmd>w<CR>", { desc = "Save file" })
-
 
 -- No highlight
 vim.keymap.set("n", "<leader>H", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
@@ -140,8 +137,6 @@ vim.keymap.set(
 vim.keymap.set("n", "<leader>tv", "<cmd>3ToggleTerm size=30 direction=vertical<cr>", { desc = "[T]erminal [V]ertical" })
 vim.keymap.set("n", "<leader>tn", "<cmd>4ToggleTerm direction=tab<cr>", { desc = "[T]erminal [N]ew tab" })
 
--- File management
-vim.keymap.set("n", "<leader>fs", "<cmd>w<CR>", { desc = "[F]ile [S]ave" })
 vim.keymap.set("n", "<leader>fq", "<cmd>q<CR>", { desc = "[F]ile [Q]uit" })
 
 -- Quick access
@@ -259,7 +254,7 @@ vim.o.confirm = true
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Diagnostic keymaps
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+-- vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
