@@ -163,15 +163,6 @@ vim.keymap.set(
 vim.keymap.set("n", "<leader>tv", "<cmd>3ToggleTerm size=30 direction=vertical<cr>", { desc = "[T]erminal [V]ertical" })
 vim.keymap.set("n", "<leader>tn", "<cmd>4ToggleTerm direction=tab<cr>", { desc = "[T]erminal [N]ew tab" })
 
--- Window management (organize under <leader>w)
-vim.keymap.set("n", "<leader>h", "<C-w>h", { desc = "Window [H]left" })
-vim.keymap.set("n", "<leader>j", "<C-w>j", { desc = "Window [J]down" })
-vim.keymap.set("n", "<leader>k", "<C-w>k", { desc = "Window [K]up" })
-vim.keymap.set("n", "<leader>l", "<C-w>l", { desc = "Winndow [L]right" })
-vim.keymap.set("n", "<leader>ws", "<cmd>split<cr>", { desc = "[W]indow [S]plit horizontal" })
-vim.keymap.set("n", "<leader>wv", "<cmd>vsplit<cr>", { desc = "[W]indow [V]split vertical" })
-vim.keymap.set("n", "<leader>wc", "<cmd>close<cr>", { desc = "[W]indow [C]lose" })
-
 -- File management
 vim.keymap.set("n", "<leader>fs", "<cmd>w<CR>", { desc = "[F]ile [S]ave" })
 vim.keymap.set("n", "<leader>fq", "<cmd>q<CR>", { desc = "[F]ile [Q]uit" })
@@ -640,13 +631,13 @@ require("lazy").setup({
 		end,
 	},
 
-	-- Better Escape
-	{
-		"max397574/better-escape.nvim",
-		config = function()
-			require("better_escape").setup()
-		end,
-	},
+	-- -- Better Escape
+	-- {
+	-- 	"max397574/better-escape.nvim",
+	-- 	config = function()
+	-- 		require("better_escape").setup()
+	-- 	end,
+	-- },
 
 	-- Tmux Navigator
 	{
@@ -1507,6 +1498,19 @@ vim.api.nvim_create_autocmd("User", {
 			{ "<leader>d", desc = "[D]elete" },
 			{ "<leader>c", desc = "[C]ode" },
 			{ "<leader>h", desc = "Git [H]unk" },
+
+			-- Window Navigation
+			{ "<leader>h", "<cmd>wincmd h<cr>", desc = "Left Window" },
+			{ "<leader>j", "<cmd>wincmd j<cr>", desc = "Down Window" },
+			{ "<leader>k", "<cmd>wincmd k<cr>", desc = "Up Window" },
+			{ "<leader>l", "<cmd>wincmd l<cr>", desc = "Right Window" },
+
+			-- Window management
+			{ "<leader>w", group = "[W]indow" },
+			{ "<leader>ws", "<cmd>split<cr>", desc = "[W]indow [S]plit horizontal" },
+			{ "<leader>wv", "<cmd>vsplit<cr>", desc = "[W]indow [V]split vertical" },
+			{ "<leader>wc", "<cmd>close<cr>", desc = "[W]indow [C]lose" },
+			{ "<leader>wo", "<cmd>only<cr>", desc = "[W]indow [O]nly (close others)" },
 		})
 	end,
 })
