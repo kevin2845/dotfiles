@@ -252,6 +252,48 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
+--
+
+-- NOTE: Vim options from Kevin's Config:
+
+-- Line numbers (relative) - add this since Kickstart only has absolute numbers
+vim.o.relativenumber = true
+
+-- Tab settings (ThePrimeAgen style - 4 spaces instead of 2)
+vim.o.tabstop = 4
+vim.o.softtabstop = 4
+vim.o.shiftwidth = 4
+vim.o.expandtab = true
+
+-- Smart indent
+vim.o.smartindent = true
+
+-- Line wrapping (disable it like in LunarVim)
+vim.o.wrap = false
+
+-- Undo directory setup (ThePrimeAgen style)
+vim.o.swapfile = false
+vim.o.backup = false
+-- Create undo directory if it doesn't exist
+local undodir = os.getenv("HOME") .. "/.vim/undodir"
+if vim.fn.isdirectory(undodir) == 0 then
+	vim.fn.mkdir(undodir, "p")
+end
+vim.o.undodir = undodir
+-- Note: vim.o.undofile = true is already set in Kickstart
+
+-- Search settings (different from Kickstart defaults)
+vim.o.hlsearch = false -- Don't keep search highlighted
+vim.o.incsearch = true -- Show search results as you type
+
+-- Scrolloff (increase from Kickstart's 10 to 8, but keep existing if you prefer 10)
+-- vim.o.scrolloff = 8  -- Uncomment if you want ThePrimeAgen's setting
+
+-- Faster update time (decrease from Kickstart's 250 to 50)
+vim.o.updatetime = 50
+
+-- Color column (optional - uncomment if you want a visual line at 80 chars)
+-- vim.o.colorcolumn = "80"
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -319,6 +361,188 @@ require("lazy").setup({
 	-- options to `gitsigns.nvim`.
 	--
 	-- See `:help gitsigns` to understand what the configuration keys do
+	-- NOTE: Kevin's Plugins!!!
+	--
+	--
+	-- File Explorer (NvimTree replacement)
+	{
+		"nvim-tree/nvim-tree.lua",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		config = function()
+			require("nvim-tree").setup({
+				sort_by = "case_sensitive",
+				view = {
+					width = 30,
+				},
+				renderer = {
+					group_empty = true,
+				},
+				filters = {
+					dotfiles = false,
+				},
+			})
+			vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file explorer" })
+		end,
+	},
+
+	-- UndoTree
+	{
+		"mbbill/undotree",
+		config = function()
+			vim.keymap.set("n", "<leader>u", "<cmd>UndotreeToggle<CR>", { desc = "Toggle UndoTree" })
+		end,
+	},
+
+	-- Colorscheme (Gruvbox as in your LunarVim config)
+	{
+		"ellisonleao/gruvbox.nvim",
+		priority = 1000,
+		config = function()
+			require("gruvbox").setup({
+				-- Configure gruvbox options here
+			})
+			-- Uncomment if you want to use gruvbox instead of tokyonight
+			-- vim.cmd.colorscheme("gruvbox")
+		end,
+	},
+
+	-- Global Note
+	{
+		"backdround/global-note.nvim",
+		config = function()
+			require("global-note").setup()
+			vim.keymap.set("n", "<leader>n", "<cmd>GlobalNote<CR>", { desc = "Global notes" })
+		end,
+	},
+
+	-- Database UI (from your LunarVim config)
+	{
+		"kristijanhusak/vim-dadbod-ui",
+		dependencies = {
+			{ "tpope/vim-dadbod", lazy = true },
+			{ "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },
+		},
+		cmd = {
+			"DBUI",
+			"DBUIToggle",
+			"DBUIAddConnection",
+			"DBUIFindBuffer",
+		},
+		init = function()
+			vim.g.db_ui_use_nerd_fonts = 1
+			vim.keymap.set("n", "<leader>`", ":DBUIToggle<CR>", { desc = "Toggle DB UI" })
+		end,
+	},
+
+	-- Colorizer
+	{
+		"NvChad/nvim-colorizer.lua",
+		config = function()
+			require("colorizer").setup()
+		end,
+	},
+
+	-- Better Escape
+	{
+		"max397574/better-escape.nvim",
+		config = function()
+			require("better_escape").setup()
+		end,
+	},
+
+	-- Tmux Navigator
+	{
+		"christoomey/vim-tmux-navigator",
+		lazy = false,
+		config = function()
+			-- Tmux navigation keymaps
+			vim.keymap.set("n", "<C-h>", "<cmd>TmuxNavigateLeft<CR>", { desc = "Tmux navigate left" })
+			vim.keymap.set("n", "<C-l>", "<cmd>TmuxNavigateRight<CR>", { desc = "Tmux navigate right" })
+			vim.keymap.set("n", "<C-j>", "<cmd>TmuxNavigateDown<CR>", { desc = "Tmux navigate down" })
+			vim.keymap.set("n", "<C-k>", "<cmd>TmuxNavigateUp<CR>", { desc = "Tmux navigate up" })
+		end,
+	},
+
+	-- Neorg (Note taking)
+	{
+		"nvim-neorg/neorg",
+		version = "*",
+		build = ":Neorg sync-parsers",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			require("neorg").setup({
+				load = {
+					["core.defaults"] = {},
+					["core.concealer"] = {},
+					["core.dirman"] = {
+						config = {
+							workspaces = {
+								notes = "~/notes",
+							},
+						},
+					},
+				},
+			})
+		end,
+	},
+
+	-- Markdown Preview
+	{
+		"iamcco/markdown-preview.nvim",
+		cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+		build = "cd app && yarn install",
+		init = function()
+			vim.g.mkdp_filetypes = { "markdown" }
+		end,
+		ft = { "markdown" },
+	},
+
+	-- VS Code Tasks
+	{
+		"EthanJWright/vs-tasks.nvim",
+		dependencies = "nvim-lua/popup.nvim",
+		config = function()
+			vim.keymap.set(
+				"n",
+				"<leader>'",
+				":lua require('telescope').extensions.vstask.tasks()<CR>",
+				{ desc = "VS Code Tasks" }
+			)
+		end,
+	},
+
+	-- Autotag for JSX/TSX
+	{
+		"windwp/nvim-ts-autotag",
+		dependencies = "nvim-treesitter/nvim-treesitter",
+		config = function()
+			require("nvim-ts-autotag").setup({
+				opts = {
+					enable_close = true,
+					enable_rename = true,
+					enable_close_on_slash = false,
+				},
+				per_filetype = {
+					["html"] = {
+						enable_close = false,
+					},
+				},
+			})
+		end,
+	},
+
+	-- Treesitter Context
+	{
+		"nvim-treesitter/nvim-treesitter-context",
+		dependencies = "nvim-treesitter/nvim-treesitter",
+		config = function()
+			require("treesitter-context").setup()
+		end,
+	},
+
+	--
+	--
+	--
 	{ -- Adds git related signs to the gutter, as well as utilities for managing changes
 		"lewis6991/gitsigns.nvim",
 		opts = {
