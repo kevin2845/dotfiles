@@ -157,7 +157,12 @@ return {
 		"nvim-neorg/neorg",
 		version = "*",
 		build = ":Neorg sync-parsers",
-		dependencies = { "nvim-lua/plenary.nvim" },
+		dependencies = { 
+			"nvim-lua/plenary.nvim",
+			"nvim-neorg/lua-utils.nvim",
+			"pysan3/pathlib.nvim",
+			"nvim-neotest/nvim-nio",
+		},
 		opts = {
 			load = {
 				["core.defaults"] = {},
