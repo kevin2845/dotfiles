@@ -89,6 +89,26 @@ return {
 			end
 		end,
 	},
+    -- Tabs at top
+	{
+		"akinsho/bufferline.nvim",
+		version = "*",
+		event = "VeryLazy",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		opts = {
+			options = {
+				mode = "buffers", -- show buffers as tabs (LunarVim style)
+				diagnostics = "nvim_lsp", -- show LSP error/warn indicators
+				separator_style = "thin", -- or "thin", "slope", etc.
+				always_show_bufferline = true,
+				show_buffer_close_icons = false,
+				show_close_icon = false,
+				offsets = {
+					{ filetype = "NvimTree", text = "File Explorer", text_align = "left" },
+				},
+			},
+		},
+	},
 
 	-- Todo comments highlighting
 	{
