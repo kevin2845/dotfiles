@@ -105,7 +105,7 @@ return {
 			vim.keymap.set("n", "<leader>fw", builtin.grep_string, { desc = "[F]ind current [W]ord" })
 
 			-- Buffer fuzzy search
-			vim.keymap.set("n", "<leader>b", function()
+			vim.keymap.set("n", "<leader>f", function()
 				builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
 					winblend = 10,
 					previewer = false,
