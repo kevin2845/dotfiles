@@ -6,7 +6,6 @@
 -- ===========================
 -- MOVEMENT & NAVIGATION (ThePrimeagen style)
 -- ===========================
-
 -- Move selected text up/down
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
@@ -55,8 +54,8 @@ vim.keymap.set("n", "<leader>l", "<C-w>l", { desc = "Go to right window" })
 -- WINDOW MANAGEMENT
 -- ===========================
 
-vim.keymap.set("n", "<leader>ws", "<cmd>split<cr>", { desc = "[W]indow [S]plit horizontal" })
-vim.keymap.set("n", "<leader>wv", "<cmd>vsplit<cr>", { desc = "[W]indow [V]split vertical" })
+vim.keymap.set("n", "<leader>-", "<cmd>split<cr>", { desc = "[W]indow [S]plit horizontal" })
+vim.keymap.set("n", "<leader>|", "<cmd>vsplit<cr>", { desc = "[W]indow [V]split vertical" })
 vim.keymap.set("n", "<leader>wc", "<cmd>close<cr>", { desc = "[W]indow [C]lose" })
 vim.keymap.set("n", "<leader>wo", "<cmd>only<cr>", { desc = "[W]indow [O]nly (close others)" })
 vim.keymap.set("n", "<leader>w=", "<C-w>=", { desc = "[W]indow [=]equalize" })
@@ -132,3 +131,13 @@ end, { desc = "Git push" })
 vim.keymap.set("n", "<leader>gl", function()
 	vim.cmd("terminal git log --oneline")
 end, { desc = "Git log" })
+
+
+vim.keymap.set("n", "K",          vim.lsp.buf.hover)            -- Hover docs
+vim.keymap.set("n", "gd",         vim.lsp.buf.definition)       -- Go to definition
+vim.keymap.set("n", "gr",         vim.lsp.buf.references)       -- References
+vim.keymap.set("n", "gI",         vim.lsp.buf.implementation)   -- Implementation
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename)           -- Rename symbol
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action)      -- Code action
+
+
