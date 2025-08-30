@@ -126,12 +126,20 @@ return {
 			end, { desc = "[S]earch [N]eovim files" })
 		end,
 	},
+	{
+		"notjedi/nvim-rooter.lua",
+		config = function()
+			require("nvim-rooter").setup()
+		end,
+	},
 
 	-- File Explorer (NvimTree)
 	{
 		"nvim-tree/nvim-tree.lua",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		opts = {
+			sync_root_with_cwd = true,
+			respect_buf_cwd = true,
 			update_focused_file = {
 				enable = true,
 				update_root = true,
