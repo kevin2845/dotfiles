@@ -1,0 +1,21 @@
+#Install packages for dev environement
+alias kevpkg='~/.scripts/install-packages.sh'
+alias kevsrc='source ~/.bashrc'
+
+
+#stuff that annoys me
+alias python='python3'
+alias please='sudo $(history -p "!!")'
+
+# alias ls='eza '
+alias ll='eza -l -h -a --git'
+alias la='eza -a'
+# alias lt='eza -T -L 2'
+alias lt='eza -T -L'
+alias ltd='eza -T -l -h --git'
+alias ce='chezmoi edit --watch'
+# alias bat='batcat'
+
+
+# scripts
+alias sesh='~/.scripts/tmux-sessionizer.sh'

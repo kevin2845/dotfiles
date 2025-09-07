@@ -7,14 +7,18 @@
 
   vars:
     common_packages:
+      # common
       - git
       - curl
       - htop
       - lazygit
       - chezmoi
+      - flatpak
+
       # for Tmux-sessionizer
       - tmux
       - fzf
+
       # Better CLI
       - eza
       - fastfetch
@@ -41,6 +45,12 @@
       - rustup
       - docker
 
+
+    flatpak_packages:
+      - com.bitwarden.desktop
+
+    flatpak_install_method: user
+    
   tasks:
     - name: Initialize os_packages
       ansible.builtin.set_fact:
@@ -52,7 +62,7 @@
       ansible.builtin.apt:
         update_cache: true
 
-    - name: Install packages on Debian/Ubuntu (continue on errors)
+    - name: Install packages on Debian/Ubuntu 
       when: ansible_facts.os_family == 'Debian'
       ansible.builtin.apt:
         name: "{{ item }}"
@@ -62,13 +72,14 @@
       register: apt_results
       failed_when: false
 
-    # --- SUSE / openSUSE ---
-    - name: Refresh zypper metadata (SUSE)
+
+    # --- openSUSE ---
+    - name: Refresh zypper (SUSE)
       when: ansible_facts.os_family == 'Suse'
       ansible.builtin.command: zypper -n ref
       changed_when: false
 
-    - name: Install packages on SUSE/openSUSE (continue on errors)
+    - name: Install packages on SUSE/openSUSE
       when: ansible_facts.os_family == 'Suse'
       community.general.zypper:
         name: "{{ item }}"
@@ -78,8 +89,73 @@
       register: zypper_results
       failed_when: false
 
+
+
+    # -------- RedHat family (RHEL/CentOS/Rocky/Alma/Fedora) --------
+    - name: Update DNF cache (RedHat family)
+      when: ansible_facts.os_family == 'RedHat' and ansible_pkg_mgr == 'dnf' and os_packages | length > 0
+      ansible.builtin.dnf:
+        update_cache: true
+
+    - name: Install packages with DNF (continue on errors)
+      when: ansible_facts.os_family == 'RedHat' and ansible_pkg_mgr == 'dnf' and os_packages | length > 0
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+        update_cache: false
+      loop: "{{ os_packages }}"
+      register: dnf_results
+      failed_when: false
+
+    - name: Update YUM cache (legacy RedHat family)
+      when: ansible_facts.os_family == 'RedHat' and ansible_pkg_mgr == 'yum' and os_packages | length > 0
+      ansible.builtin.yum:
+        update_cache: true
+
+    - name: Install packages with YUM (continue on errors)
+      when: ansible_facts.os_family == 'RedHat' and ansible_pkg_mgr == 'yum' and os_packages | length > 0
+      ansible.builtin.yum:
+        name: "{{ item }}"
+        state: present
+        update_cache: false
+      loop: "{{ os_packages }}"
+      register: yum_results
+      failed_when: false
+
+    # -------- Arch / Manjaro (pacman) --------
+    - name: Update pacman cache (Arch)
+      when: ansible_facts.os_family == 'Archlinux' and os_packages | length > 0
+      community.general.pacman:
+        update_cache: true
+
+    - name: Install packages with pacman (continue on errors)
+      when: ansible_facts.os_family == 'Archlinux' and os_packages | length > 0
+      community.general.pacman:
+        name: "{{ item }}"
+        state: present
+        update_cache: false
+      loop: "{{ os_packages }}"
+      register: pacman_results
+      failed_when: false
+
+    # -------- Alpine (apk) --------
+    - name: Update apk cache (Alpine)
+      when: ansible_facts.os_family == 'Alpine' and os_packages | length > 0
+      community.general.apk:
+        update_cache: true
+
+    - name: Install packages with apk (continue on errors)
+      when: ansible_facts.os_family == 'Alpine' and os_packages | length > 0
+      community.general.apk:
+        name: "{{ item }}"
+        state: present
+        update_cache: false
+      loop: "{{ os_packages }}"
+      register: apk_results
+      failed_when: false
+
     # --- macOS (Homebrew) ---
-    - name: Install packages on macOS (continue on errors)
+    - name: Install packages on macOS 
       when: ansible_facts.os_family == 'Darwin'
       community.general.homebrew:
         name: "{{ item }}"
@@ -88,25 +164,49 @@
       register: brew_results
       failed_when: false
 
-    # --- Summary: show only failures ---
+
+    # --- Flatpaks ---
+    - name: Ensure Flatpak installed (Linux)
+      when: ansible_facts.os_family != 'Darwin' and flatpak_packages | length > 0
+      ansible.builtin.package:
+        name: flatpak
+        state: present
+      failed_when: false
+
+    - name: Ensure Flathub remote present
+      when: ansible_facts.os_family != 'Darwin' and flatpak_packages | length > 0
+      community.general.flatpak_remote:
+        name: flathub
+        state: present
+        flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+        method: "{{ flatpak_install_method }}"
+      become: "{{ flatpak_install_method == 'system' }}"
+      failed_when: false
+
+    - name: Install Flatpak apps (continue on errors)
+      when: ansible_facts.os_family != 'Darwin' and flatpak_packages | length > 0
+      community.general.flatpak:
+        name: "{{ item }}"
+        state: present
+        method: "{{ flatpak_install_method }}"
+        remote: flathub
+      loop: "{{ flatpak_packages }}"
+      register: flatpak_results
+      failed_when: false
+      become: "{{ flatpak_install_method == 'system' }}"
+
+
+    # -------- One-line failure summary --------
     - name: Summarize failed installs
       vars:
-        failed_apt: >-
-          {{
-            (apt_results.results | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list)
-            if (apt_results is defined and apt_results.results is defined) else []
-          }}
-        failed_zypper: >-
-          {{
-            (zypper_results.results | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list)
-            if (zypper_results is defined and zypper_results.results is defined) else []
-          }}
-        failed_brew: >-
-          {{
-            (brew_results.results | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list)
-            if (brew_results is defined and brew_results.results is defined) else []
-          }}
-        all_failed: "{{ (failed_apt + failed_zypper + failed_brew) | unique }}"
+        failed_apt:      "{{ (apt_results.results      | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list) if (apt_results      is defined and apt_results.results      is defined) else [] }}"
+        failed_zypper:   "{{ (zypper_results.results   | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list) if (zypper_results   is defined and zypper_results.results   is defined) else [] }}"
+        failed_dnf:      "{{ (dnf_results.results      | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list) if (dnf_results      is defined and dnf_results.results      is defined) else [] }}"
+        failed_yum:      "{{ (yum_results.results      | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list) if (yum_results      is defined and yum_results.results      is defined) else [] }}"
+        failed_pacman:   "{{ (pacman_results.results   | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list) if (pacman_results   is defined and pacman_results.results   is defined) else [] }}"
+        failed_apk:      "{{ (apk_results.results      | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list) if (apk_results      is defined and apk_results.results      is defined) else [] }}"
+        failed_brew:     "{{ (brew_results.results     | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list) if (brew_results     is defined and brew_results.results     is defined) else [] }}"
+        failed_flatpak:  "{{ (flatpak_results.results  | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list) if (flatpak_results  is defined and flatpak_results.results  is defined) else [] }}"
+        all_failed: "{{ (failed_apt + failed_zypper + failed_dnf + failed_yum + failed_pacman + failed_apk + failed_brew + failed_flatpak) | unique }}"
       ansible.builtin.debug:
-        msg: >-
-          Failed packages: {{ all_failed | join(', ') if all_failed|length > 0 else 'None' }}
+        msg: "Failed packages: {{ all_failed | join(', ') if all_failed|length > 0 else 'None' }}"
