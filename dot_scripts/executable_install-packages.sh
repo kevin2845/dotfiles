@@ -1,4 +1,10 @@
-
+#.scripts/install-packages.sh
 #!/usr/bin/env bash
 
-ansible-playbook playbooks/install_common_packages.yml -K
+set -euo pipefail
+
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+
+
+ANSIBLE_DISPLAY_SKIPPED_HOSTS=false ansible-playbook "$SCRIPT_DIR/playbooks/install_common_packages.yml" -K 
