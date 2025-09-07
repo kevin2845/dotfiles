@@ -1,9 +1,117 @@
-
-- name: Refresh zypper metadata
+# zypper: install / update / upgrade
+- name: zypper refresh
+  when: pkg_mode in ['update','upgrade'] or (pkg_mode == 'install' and os_packages | length > 0)
   ansible.builtin.command: zypper -n ref
   changed_when: false
+  failed_when: false
 
-- name: Install packages (zypper, continue on errors)
+# Detect Tumbleweed (robust)
+- name: Read /etc/os-release (for Tumbleweed detection)
+  ansible.builtin.slurp:
+    src: /etc/os-release
+  register: osrel
+  changed_when: false
+  failed_when: false
+
+- name: Detect openSUSE Tumbleweed
+  ansible.builtin.set_fact:
+    is_tumbleweed: >-
+      {{
+        ('tumbleweed' in ((ansible_facts.distribution | default('')) ~ ' ' ~
+                          (ansible_facts.distribution_version | default(''))) | lower)
+        or ('tumbleweed' in ((osrel.content | default('') | b64decode) | lower))
+        or (suse_force_dup | default(false))
+      }}
+
+# show pending updates (less noisy)
+- name: zypper list pending package updates
+  when: pkg_mode == 'update'
+  ansible.builtin.command: zypper -q --no-refresh list-updates --all
+  register: zy_lu
+  changed_when: false
+  failed_when: false
+
+- name: Show pending updates (SUSE)
+  when: pkg_mode == 'update'
+  ansible.builtin.debug:
+    msg: "{{ (zy_lu.stdout | default('') | trim) | ternary(zy_lu.stdout, 'No updates found.') }}"
+
+# ---------- TUMBLEWEED -----------
+- name: Tumbleweed dist-upgrade (dry-run)
+  when: pkg_mode == 'update' and is_tumbleweed
+  # NOTE: zypper global options must precede the command (dup)
+  ansible.builtin.command: zypper -n --no-refresh dup --dry-run --details
+  register: zy_dup_dry
+  changed_when: false
+  failed_when: false
+
+- name: Show Tumbleweed dist-upgrade changes (dry-run)
+  when: pkg_mode == 'update' and is_tumbleweed
+  ansible.builtin.debug:
+    msg: "{{ (zy_dup_dry.stdout ~ '\n' ~ zy_dup_dry.stderr) | trim | default('No changes') }}"
+
+# before any upgrade, record zypp history size so we can show exactly what changed
+- name: Record zypp history size (pre-upgrade)
+  when: pkg_mode == 'upgrade'
+  ansible.builtin.stat:
+    path: /var/log/zypp/history
+  register: zyhist_pre
+
+- name: Tumbleweed - dist-upgrade to latest snapshot
+  when: pkg_mode == 'upgrade' and is_tumbleweed
+  # NOTE: allow vendor change for typical Packman cases
+  ansible.builtin.command: zypper -n --no-refresh dup --allow-vendor-change
+  register: zy_dup
+  changed_when: "'Nothing to do.' not in (zy_dup.stdout | default(''))"
+  failed_when: false
+
+# ---------- LEAP -----------
+- name: Leap/SLES - upgrade all to latest
+  when: pkg_mode == 'upgrade' and not is_tumbleweed
+  community.general.zypper:
+    name: "*"
+    state: latest
+    update_cache: false
+  register: zypper_upgrade
+  failed_when: false
+
+# summarize what changed this run (from /var/log/zypp/history)
+- name: Compute zypp history offset (post-upgrade)
+  when: pkg_mode == 'upgrade'
+  ansible.builtin.set_fact:
+    zyhist_offset: "{{ (zyhist_pre.stat.size | default(0) | int) + 1 }}"
+
+- name: Read zypp history delta (entries from this upgrade)
+  when: pkg_mode == 'upgrade'
+  ansible.builtin.command: bash -lc "tail -c +{{ zyhist_offset }} /var/log/zypp/history"
+  register: zyhist_delta
+  changed_when: false
+  failed_when: false
+
+- name: Parse zypp history delta
+  when: pkg_mode == 'upgrade'
+  ansible.builtin.set_fact:
+    _zy_lines: "{{ (zyhist_delta.stdout | default('') | trim) | length > 0
+                  | ternary((zyhist_delta.stdout | trim).split('\n'), []) }}"
+    _zy_installed:   "{{ _zy_lines | select('search', '\\|install\\|')    | list }}"
+    _zy_upgraded:    "{{ _zy_lines | select('search', '\\|upgrade\\|')    | list }}"
+    _zy_downgraded:  "{{ _zy_lines | select('search', '\\|downgrade\\|')  | list }}"
+    _zy_reinstalled: "{{ _zy_lines | select('search', '\\|reinstall\\|')  | list }}"
+    _zy_removed:     "{{ _zy_lines | select('search', '\\|remove\\|')     | list }}"
+
+- name: Summary — packages changed this run
+  when: pkg_mode == 'upgrade'
+  ansible.builtin.debug:
+    msg: |
+      Upgraded:     {{ _zy_upgraded    | map('regex_replace','^.*?\\|upgrade\\|([^|]+)\\|([^|]+)\\|.*$','\\1 \\2')    | list | join(', ') if _zy_upgraded|length    > 0 else 'none' }}
+      Installed:    {{ _zy_installed   | map('regex_replace','^.*?\\|install\\|([^|]+)\\|([^|]+)\\|.*$','\\1 \\2')   | list | join(', ') if _zy_installed|length   > 0 else 'none' }}
+      Downgraded:   {{ _zy_downgraded  | map('regex_replace','^.*?\\|downgrade\\|([^|]+)\\|([^|]+)\\|.*$','\\1 \\2') | list | join(', ') if _zy_downgraded|length  > 0 else 'none' }}
+      Reinstalled:  {{ _zy_reinstalled | map('regex_replace','^.*?\\|reinstall\\|([^|]+)\\|([^|]+)\\|.*$','\\1 \\2') | list | join(', ') if _zy_reinstalled|length > 0 else 'none' }}
+      Removed:      {{ _zy_removed     | map('regex_replace','^.*?\\|remove\\|([^|]+)\\|([^|]+)\\|.*$','\\1 \\2')    | list | join(', ') if _zy_removed|length     > 0 else 'none' }}
+
+# ---------- INSTALL MODE ----------
+- name: zypper install packages (continue on errors)
+  when: pkg_mode == 'install' and os_packages | length > 0
   community.general.zypper:
     name: "{{ item }}"
     state: present

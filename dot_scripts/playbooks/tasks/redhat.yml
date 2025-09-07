@@ -1,11 +1,56 @@
-
-- name: Update DNF cache
-  when: ansible_pkg_mgr == 'dnf'
-  ansible.builtin.dnf:
+# DNF/YUM: install / update / upgrade
+- name: makecache (dnf/yum)
+  when: pkg_mode in ['update','upgrade']
+  ansible.builtin.package:
     update_cache: true
+  failed_when: false
 
-- name: Install packages (DNF, continue on errors)
-  when: ansible_pkg_mgr == 'dnf'
+- name: dnf check-update
+  when: pkg_mode == 'update' and ansible_pkg_mgr == 'dnf'
+  ansible.builtin.command: dnf -q check-update
+  register: dnf_check
+  changed_when: false
+  failed_when: dnf_check.rc not in [0, 100]
+
+- name: Show pending updates (DNF)
+  when: pkg_mode == 'update' and ansible_pkg_mgr == 'dnf'
+  ansible.builtin.debug:
+    msg: "{{ dnf_check.stdout | default('No updates listed') }}"
+
+- name: dnf upgrade all
+  when: pkg_mode == 'upgrade' and ansible_pkg_mgr == 'dnf'
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+    autoremove: yes
+  register: dnf_upgrade
+  failed_when: false
+
+
+- name: yum check-update
+  when: pkg_mode == 'update' and ansible_pkg_mgr == 'yum'
+  ansible.builtin.command: yum -q check-update
+  register: yum_check
+  changed_when: false
+  failed_when: yum_check.rc not in [0, 100]
+
+- name: Show pending updates (YUM)
+  when: pkg_mode == 'update' and ansible_pkg_mgr == 'yum'
+  ansible.builtin.debug:
+    msg: "{{ yum_check.stdout | default('No updates listed') }}"
+
+
+- name: yum upgrade all (legacy)
+  when: pkg_mode == 'upgrade' and ansible_pkg_mgr == 'yum'
+  ansible.builtin.yum:
+    name: "*"
+    state: latest
+    autoremove: yes
+  register: yum_upgrade
+  failed_when: false
+
+- name: dnf install packages (continue on errors)
+  when: pkg_mode == 'install' and ansible_pkg_mgr == 'dnf' and os_packages | length > 0
   ansible.builtin.dnf:
     name: "{{ item }}"
     state: present
@@ -14,13 +59,8 @@
   register: dnf_results
   failed_when: false
 
-- name: Update YUM cache
-  when: ansible_pkg_mgr == 'yum'
-  ansible.builtin.yum:
-    update_cache: true
-
-- name: Install packages (YUM, continue on errors)
-  when: ansible_pkg_mgr == 'yum'
+- name: yum install packages (continue on errors)
+  when: pkg_mode == 'install' and ansible_pkg_mgr == 'yum' and os_packages | length > 0
   ansible.builtin.yum:
     name: "{{ item }}"
     state: present

@@ -1,0 +1,40 @@
+#.scripts/playbooks/update_packages.yml
+---
+- name: Update package metadata (no installs)
+  hosts: localhost
+  connection: local
+  become: true
+  gather_facts: yes
+
+  vars:
+    pkg_mode: update          
+    flatpak_install_method: user
+
+  tasks:
+    - name: Debian/Ubuntu
+      include_tasks: tasks/debian.yml
+      when: ansible_facts.os_family == 'Debian'
+
+    - name: SUSE/openSUSE
+      include_tasks: tasks/suse.yml
+      when: ansible_facts.os_family == 'Suse'
+
+    - name: RedHat family (RHEL/CentOS/Rocky/Alma/Fedora)
+      include_tasks: tasks/redhat.yml
+      when: ansible_facts.os_family == 'RedHat'
+
+    - name: Arch/Manjaro
+      include_tasks: tasks/arch.yml
+      when: ansible_facts.os_family == 'Archlinux'
+
+    - name: Alpine
+      include_tasks: tasks/alpine.yml
+      when: ansible_facts.os_family == 'Alpine'
+
+    - name: macOS (Homebrew)
+      include_tasks: tasks/darwin.yml
+      when: ansible_facts.os_family == 'Darwin'
+
+    - name: Flatpaks (Linux only)
+      include_tasks: tasks/flatpaks.yml
+      when: ansible_facts.os_family != 'Darwin'

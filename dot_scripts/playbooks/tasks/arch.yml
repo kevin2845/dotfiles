@@ -1,9 +1,33 @@
-
-- name: Update pacman cache
+# pacman: install / update / upgrade
+- name: pacman update cache
+  when: pkg_mode in ['update','upgrade']
   community.general.pacman:
     update_cache: true
+  failed_when: false
 
-- name: Install packages (pacman, continue on errors)
+- name: pacman list upgradable (-Qu)
+  when: pkg_mode == 'update'
+  ansible.builtin.command: pacman -Qu
+  register: pac_qu
+  changed_when: false
+  failed_when: false
+
+- name: Show pending updates (pacman)
+  when: pkg_mode == 'update'
+  ansible.builtin.debug:
+    msg: "{{ pac_qu.stdout | default('No updates listed') }}"
+
+
+
+- name: pacman full upgrade (-Syu)
+  when: pkg_mode == 'upgrade'
+  community.general.pacman:
+    upgrade: true
+  register: pacman_upgrade
+  failed_when: false
+
+- name: pacman install packages (continue on errors)
+  when: pkg_mode == 'install' and os_packages | length > 0
   community.general.pacman:
     name: "{{ item }}"
     state: present

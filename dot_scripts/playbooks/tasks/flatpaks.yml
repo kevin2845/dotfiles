@@ -1,11 +1,13 @@
-
-- name: Ensure Flatpak installed
+# Flatpaks: install vs update/upgrade via pkg_mode
+- name: ensure flatpak installed
   ansible.builtin.package:
     name: flatpak
     state: present
   failed_when: false
 
-- name: Ensure Flathub remote present
+
+- name: ensure flathub remote
+  when: pkg_mode == 'install' and flatpak_packages | length > 0
   community.general.flatpak_remote:
     name: flathub
     state: present
@@ -14,7 +16,31 @@
   become: "{{ flatpak_install_method == 'system' }}"
   failed_when: false
 
-- name: Install Flatpak apps (continue on errors)
+
+- name: Refresh Flatpak metadata (appstream)
+  when: pkg_mode == 'update'
+  ansible.builtin.command: >
+    flatpak -y update --appstream {{ '--system' if flatpak_install_method == 'system' else '--user' }}
+  changed_when: false
+  failed_when: false
+
+- name: Flatpak pending updates
+  when: pkg_mode == 'update'
+  ansible.builtin.command: >
+    flatpak update --list {{ '--system' if flatpak_install_method == 'system' else '--user' }}
+  register: fp_list
+  changed_when: false
+  failed_when: false
+
+- name: Show pending Flatpak updates
+  when: pkg_mode == 'update'
+  ansible.builtin.debug:
+    msg: "{{ (fp_list.stdout | default('') | trim) | ternary(fp_list.stdout, 'No Flatpak updates') }}"
+
+
+
+- name: install flatpak apps (continue on errors)
+  when: pkg_mode == 'install' and flatpak_packages | length > 0
   community.general.flatpak:
     name: "{{ item }}"
     state: present
@@ -24,3 +50,11 @@
   register: flatpak_results
   failed_when: false
   become: "{{ flatpak_install_method == 'system' }}"
+
+- name: flatpak update (system/user)
+  when: pkg_mode in ['update','upgrade']
+  ansible.builtin.command: >
+    flatpak -y update {{ '--system' if flatpak_install_method == 'system' else '--user' }}
+  register: flatpak_update
+  changed_when: "'Nothing to do' not in (flatpak_update.stdout | default(''))"
+  failed_when: false

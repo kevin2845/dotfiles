@@ -1,13 +1,34 @@
-
-- name: Update apk cache
+# apk: install / update / upgrade
+- name: apk update index
+  when: pkg_mode in ['update','upgrade']
   community.general.apk:
     update_cache: true
+  failed_when: false
 
-- name: Install packages (apk, continue on errors)
+- name: apk list upgradable
+  when: pkg_mode == 'update'
+  ansible.builtin.command: apk list -u
+  register: apk_list_u
+  changed_when: false
+  failed_when: false
+
+- name: Show pending updates (apk)
+  when: pkg_mode == 'update'
+  ansible.builtin.debug:
+    msg: "{{ apk_list_u.stdout | default('No updates listed') }}"
+
+- name: apk upgrade
+  when: pkg_mode == 'upgrade'
+  community.general.apk:
+    upgrade: true
+  register: apk_upgrade
+  failed_when: false
+
+- name: apk install packages (continue on errors)
+  when: pkg_mode == 'install' and os_packages | length > 0
   community.general.apk:
     name: "{{ item }}"
     state: present
-    update_cache: false
   loop: "{{ os_packages }}"
   register: apk_results
   failed_when: false

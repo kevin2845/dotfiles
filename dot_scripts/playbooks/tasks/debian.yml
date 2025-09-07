@@ -1,8 +1,35 @@
-- name: Update APT cache
+# APT: install / update / upgrade
+- name: apt update cache
+  when: pkg_mode in ['update','upgrade']
   ansible.builtin.apt:
     update_cache: true
+  failed_when: false
 
-- name: Install packages (APT, continue on errors)
+- name: apt list upgradable
+  when: pkg_mode == 'update'
+  ansible.builtin.command: apt list --upgradable
+  register: apt_upg
+  changed_when: false
+  failed_when: false
+
+- name: Show pending updates (APT)
+  when: pkg_mode == 'update'
+  ansible.builtin.debug:
+    msg: "{{ apt_upg.stdout | default('No updates listed') }}"
+
+
+
+- name: apt full upgrade (dist)
+  when: pkg_mode == 'upgrade'
+  ansible.builtin.apt:
+    upgrade: dist
+    autoremove: yes
+    autoclean: yes
+  register: apt_upgrade
+  failed_when: false
+
+- name: apt install packages (continue on errors)
+  when: pkg_mode == 'install' and os_packages | length > 0
   ansible.builtin.apt:
     name: "{{ item }}"
     state: present
