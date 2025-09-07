@@ -1,0 +1,42 @@
+
+
+# Themes:
+import:
+ - ~/.config/alacritty/themes/themes/gruvbox_dark.yaml
+# More Themes:
+# https://github.com/alacritty/alacritty-theme
+# Fonts
+font:
+  normal:
+    family: Hack Nerd Font Mono
+    style: Regular
+
+  bold:
+    family: Hack Nerd Font Mono
+    style: Bold
+
+  italic:
+    family: Hack Nerd Font Mono
+    style: Italic
+
+  bold_italic:
+    family: Hack Nerd Font Mono
+    style: Bold Italic
+
+  size: 17
+
+# Window Size:
+window:
+   dimensions:
+     columns: 200
+     lines: 40
+key_bindings:
+  - {key: F, mods: Command, chars: "sesh \x0D"}
+  - {key: I, mods: Command, chars: "lvim \x0D"}
+  - {key: F,mods: Command|Shift, mode: ~Search,action: ReceiveChar }
+  - {key: Y,mods: Command, chars: "cheat \x0D"}
+  #- {key: Left, mods: Command|Shift|Alt, action: None}
+  
+alt_send_esc: false
+
+
