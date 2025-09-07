@@ -1,5 +1,31 @@
+# Homebrew: install / update / upgrade
+- name: brew update (Homebrew itself)
+  when: pkg_mode in ['update','upgrade']
+  community.general.homebrew:
+    update_homebrew: true
+  failed_when: false
 
-- name: Install packages (Homebrew, continue on errors)
+- name: brew outdated
+  when: pkg_mode == 'update'
+  ansible.builtin.command: brew outdated
+  register: brew_out
+  changed_when: false
+  failed_when: false
+
+- name: Show pending updates (Homebrew)
+  when: pkg_mode == 'update'
+  ansible.builtin.debug:
+    msg: "{{ brew_out.stdout | default('No updates listed') }}"
+
+- name: brew upgrade all formulae and casks
+  when: pkg_mode == 'upgrade'
+  community.general.homebrew:
+    upgrade_all: true
+  register: brew_upgrade
+  failed_when: false
+
+- name: brew install packages (continue on errors)
+  when: pkg_mode == 'install' and os_packages | length > 0
   community.general.homebrew:
     name: "{{ item }}"
     state: present

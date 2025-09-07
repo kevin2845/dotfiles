@@ -6,8 +6,8 @@
   gather_facts: yes
 
   vars:
+    pkg_mode: install  
     common_packages:
-
       # common
       - git
       - curl
@@ -15,6 +15,9 @@
       - lazygit
       - chezmoi
       - flatpak
+
+      # Applications
+      - alacritty
 
       # tmux helpers
       - tmux
@@ -24,7 +27,8 @@
       - eza
       - fastfetch
       - bat
-
+      - starship
+      
       # Networking
       - nmap
       - netcat
@@ -57,34 +61,44 @@
 
     - name: Debian/Ubuntu tasks
       ansible.builtin.include_tasks: tasks/debian.yml
-      when: ansible_facts.os_family == 'Debian' and os_packages | length > 0
+      when: ansible_facts.os_family == 'Debian'
+            and ((pkg_mode == 'install' and os_packages | length > 0) or (pkg_mode in ['update','upgrade']))
 
     - name: SUSE/openSUSE tasks
       ansible.builtin.include_tasks: tasks/suse.yml
-      when: ansible_facts.os_family == 'Suse' and os_packages | length > 0
+      when: ansible_facts.os_family == 'Suse'
+            and ((pkg_mode == 'install' and os_packages | length > 0) or (pkg_mode in ['update','upgrade']))
 
     - name: RedHat family tasks (RHEL/CentOS/Rocky/Alma/Fedora)
       ansible.builtin.include_tasks: tasks/redhat.yml
-      when: ansible_facts.os_family == 'RedHat' and os_packages | length > 0
+      when: ansible_facts.os_family == 'RedHat'
+            and ((pkg_mode == 'install' and os_packages | length > 0) or (pkg_mode in ['update','upgrade']))
 
     - name: Arch/Manjaro tasks
       ansible.builtin.include_tasks: tasks/arch.yml
-      when: ansible_facts.os_family == 'Archlinux' and os_packages | length > 0
+      when: ansible_facts.os_family == 'Archlinux'
+            and ((pkg_mode == 'install' and os_packages | length > 0) or (pkg_mode in ['update','upgrade']))
 
     - name: Alpine tasks
       ansible.builtin.include_tasks: tasks/alpine.yml
-      when: ansible_facts.os_family == 'Alpine' and os_packages | length > 0
+      when: ansible_facts.os_family == 'Alpine'
+            and ((pkg_mode == 'install' and os_packages | length > 0) or (pkg_mode in ['update','upgrade']))
 
     - name: macOS (Homebrew) tasks
       ansible.builtin.include_tasks: tasks/darwin.yml
-      when: ansible_facts.os_family == 'Darwin' and os_packages | length > 0
+      when: ansible_facts.os_family == 'Darwin'
+            and ((pkg_mode == 'install' and os_packages | length > 0) or (pkg_mode in ['update','upgrade']))
 
     - name: Flatpaks (Linux only)
       ansible.builtin.include_tasks: tasks/flatpaks.yml
-      when: ansible_facts.os_family != 'Darwin' and flatpak_packages | length > 0
+      when: ansible_facts.os_family != 'Darwin' and (
+              (pkg_mode == 'install' and flatpak_packages | length > 0)
+              or (pkg_mode in ['update','upgrade'])
+            )
 
-    # One-line failure summary
+    # One-line failure summary (only for install mode)
     - name: Summarize failed installs
+      when: pkg_mode == 'install'
       vars:
         failed_apt:      "{{ (apt_results.results      | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list) if (apt_results      is defined and apt_results.results      is defined) else [] }}"
         failed_zypper:   "{{ (zypper_results.results   | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list) if (zypper_results   is defined and zypper_results.results   is defined) else [] }}"
