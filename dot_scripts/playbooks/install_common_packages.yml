@@ -1,15 +1,26 @@
 
 ---
 - name: Install common packages across different Linux distros
-  hosts: all
+  hosts: localhost
   become: true
   vars:
     common_packages:
       - git
       - curl
       - htop
+      # for Tmux-sessionizer
+      - tmux
+      - fzf
+      # Better CLI
+      - eza
+      - fastfetch
+
 
   tasks:
+    - name: Initialize os_packages
+      set_fact:
+        os_packages: "{{ common_packages }}"
+
     - name: Set package list for Ubuntu/Debian
       set_fact:
         os_packages: "{{ common_packages }}"
@@ -32,6 +43,9 @@
       loop: "{{ os_packages }}"
       when: ansible_os_family == 'Darwin'
 
+    - name: Show package list to install
+      debug:
+        var: os_packages
     - name: Install packages on Ubuntu/Debian
       apt:
         name: "{{ os_packages }}"
@@ -39,8 +53,11 @@
         update_cache: true
       when: ansible_os_family == 'Debian'
 
-    - name: Install packages on openSUSE
+    # SUSE/openSUSE (sudo required)
+    - name: Install packages on SUSE/openSUSE
+      become: true
       zypper:
         name: "{{ os_packages }}"
         state: present
-      when: ansible_distribution == 'openSUSE'
+        update_cache: true
+      when: ansible_facts.os_family == 'Suse'
