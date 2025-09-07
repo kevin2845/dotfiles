@@ -1,63 +1,112 @@
-
 ---
-- name: Install common packages across different Linux distros
+- name: Install common packages
   hosts: localhost
+  connection: local
   become: true
+  gather_facts: yes
+
   vars:
     common_packages:
       - git
       - curl
       - htop
+      - lazygit
+      - chezmoi
       # for Tmux-sessionizer
       - tmux
       - fzf
       # Better CLI
       - eza
       - fastfetch
+      - bat
 
+      # Networking things
+      - nmap
+      - netcat
+      - mtr
+      - bind-utils
+      - telnet
+
+      # Things for languages
+      - make
+      - cmake
+      - gcc
+      - clang
+      - python3
+      - python3-pip
+      - nodejs
+      - npm
+      - yarn
+      - golang
+      - rustup
+      - docker
 
   tasks:
     - name: Initialize os_packages
-      set_fact:
+      ansible.builtin.set_fact:
         os_packages: "{{ common_packages }}"
 
-    - name: Set package list for Ubuntu/Debian
-      set_fact:
-        os_packages: "{{ common_packages }}"
-      when: ansible_os_family == 'Debian'
+    # --- Debian/Ubuntu ---
+    - name: Update APT cache (Debian/Ubuntu)
+      when: ansible_facts.os_family == 'Debian'
+      ansible.builtin.apt:
+        update_cache: true
 
-    - name: Set package list for openSUSE
-      set_fact:
-        os_packages: "{{ common_packages }}"
-      when: ansible_distribution == 'openSUSE'
+    - name: Install packages on Debian/Ubuntu (continue on errors)
+      when: ansible_facts.os_family == 'Debian'
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: false
+      loop: "{{ os_packages }}"
+      register: apt_results
+      failed_when: false
 
-    - name: Set package list for macOS (Homebrew names may differ)
-      set_fact:
-        os_packages: "{{ common_packages }}"
-      when: ansible_os_family == 'Darwin'
+    # --- SUSE / openSUSE ---
+    - name: Refresh zypper metadata (SUSE)
+      when: ansible_facts.os_family == 'Suse'
+      ansible.builtin.command: zypper -n ref
+      changed_when: false
 
-    - name: Ensure Homebrew is installed (macOS only)
-      homebrew:
+    - name: Install packages on SUSE/openSUSE (continue on errors)
+      when: ansible_facts.os_family == 'Suse'
+      community.general.zypper:
+        name: "{{ item }}"
+        state: present
+        update_cache: false
+      loop: "{{ os_packages }}"
+      register: zypper_results
+      failed_when: false
+
+    # --- macOS (Homebrew) ---
+    - name: Install packages on macOS (continue on errors)
+      when: ansible_facts.os_family == 'Darwin'
+      community.general.homebrew:
         name: "{{ item }}"
         state: present
       loop: "{{ os_packages }}"
-      when: ansible_os_family == 'Darwin'
+      register: brew_results
+      failed_when: false
 
-    - name: Show package list to install
-      debug:
-        var: os_packages
-    - name: Install packages on Ubuntu/Debian
-      apt:
-        name: "{{ os_packages }}"
-        state: present
-        update_cache: true
-      when: ansible_os_family == 'Debian'
-
-    # SUSE/openSUSE (sudo required)
-    - name: Install packages on SUSE/openSUSE
-      become: true
-      zypper:
-        name: "{{ os_packages }}"
-        state: present
-        update_cache: true
-      when: ansible_facts.os_family == 'Suse'
+    # --- Summary: show only failures ---
+    - name: Summarize failed installs
+      vars:
+        failed_apt: >-
+          {{
+            (apt_results.results | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list)
+            if (apt_results is defined and apt_results.results is defined) else []
+          }}
+        failed_zypper: >-
+          {{
+            (zypper_results.results | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list)
+            if (zypper_results is defined and zypper_results.results is defined) else []
+          }}
+        failed_brew: >-
+          {{
+            (brew_results.results | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list)
+            if (brew_results is defined and brew_results.results is defined) else []
+          }}
+        all_failed: "{{ (failed_apt + failed_zypper + failed_brew) | unique }}"
+      ansible.builtin.debug:
+        msg: >-
+          Failed packages: {{ all_failed | join(', ') if all_failed|length > 0 else 'None' }}

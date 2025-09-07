@@ -3,14 +3,17 @@ export EDITOR='nvim'
 #Install packages for dev environement
 alias kevpkg='~/.scripts/install-packages.sh'
 
-#alias ls='exa '
-alias ll='exa -l -h --git'
-alias la='exa -a'
-alias lt='exa -T -L 2'
-alias ltl='exa -T -L'
-alias ltd='exa -T -l -h --git'
+alias kevsrc='source ~/.bashrc'
+alias please='sudo $(history -p "!!")'
+
+# alias ls='eza '
+alias ll='eza -l -h -a --git'
+alias la='eza -a'
+# alias lt='eza -T -L 2'
+alias lt='eza -T -L'
+alias ltd='eza -T -l -h --git'
 alias ce='chezmoi edit --watch'
-alias bat='batcat'
+# alias bat='batcat'
 
 alias sesh='~/.scripts/tmux-sessionizer.sh'
 
