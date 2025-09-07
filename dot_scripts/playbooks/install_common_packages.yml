@@ -7,6 +7,7 @@
 
   vars:
     common_packages:
+
       # common
       - git
       - curl
@@ -15,7 +16,7 @@
       - chezmoi
       - flatpak
 
-      # for Tmux-sessionizer
+      # tmux helpers
       - tmux
       - fzf
 
@@ -24,14 +25,14 @@
       - fastfetch
       - bat
 
-      # Networking things
+      # Networking
       - nmap
       - netcat
       - mtr
       - bind-utils
       - telnet
 
-      # Things for languages
+      # Toolchains
       - make
       - cmake
       - gcc
@@ -45,158 +46,44 @@
       - rustup
       - docker
 
-
     flatpak_packages:
       - com.bitwarden.desktop
-
     flatpak_install_method: user
-    
+
   tasks:
-    - name: Initialize os_packages
+    - name: Set working list
       ansible.builtin.set_fact:
         os_packages: "{{ common_packages }}"
 
-    # --- Debian/Ubuntu ---
-    - name: Update APT cache (Debian/Ubuntu)
-      when: ansible_facts.os_family == 'Debian'
-      ansible.builtin.apt:
-        update_cache: true
+    - name: Debian/Ubuntu tasks
+      ansible.builtin.include_tasks: tasks/debian.yml
+      when: ansible_facts.os_family == 'Debian' and os_packages | length > 0
 
-    - name: Install packages on Debian/Ubuntu 
-      when: ansible_facts.os_family == 'Debian'
-      ansible.builtin.apt:
-        name: "{{ item }}"
-        state: present
-        update_cache: false
-      loop: "{{ os_packages }}"
-      register: apt_results
-      failed_when: false
+    - name: SUSE/openSUSE tasks
+      ansible.builtin.include_tasks: tasks/suse.yml
+      when: ansible_facts.os_family == 'Suse' and os_packages | length > 0
 
+    - name: RedHat family tasks (RHEL/CentOS/Rocky/Alma/Fedora)
+      ansible.builtin.include_tasks: tasks/redhat.yml
+      when: ansible_facts.os_family == 'RedHat' and os_packages | length > 0
 
-    # --- openSUSE ---
-    - name: Refresh zypper (SUSE)
-      when: ansible_facts.os_family == 'Suse'
-      ansible.builtin.command: zypper -n ref
-      changed_when: false
-
-    - name: Install packages on SUSE/openSUSE
-      when: ansible_facts.os_family == 'Suse'
-      community.general.zypper:
-        name: "{{ item }}"
-        state: present
-        update_cache: false
-      loop: "{{ os_packages }}"
-      register: zypper_results
-      failed_when: false
-
-
-
-    # -------- RedHat family (RHEL/CentOS/Rocky/Alma/Fedora) --------
-    - name: Update DNF cache (RedHat family)
-      when: ansible_facts.os_family == 'RedHat' and ansible_pkg_mgr == 'dnf' and os_packages | length > 0
-      ansible.builtin.dnf:
-        update_cache: true
-
-    - name: Install packages with DNF (continue on errors)
-      when: ansible_facts.os_family == 'RedHat' and ansible_pkg_mgr == 'dnf' and os_packages | length > 0
-      ansible.builtin.dnf:
-        name: "{{ item }}"
-        state: present
-        update_cache: false
-      loop: "{{ os_packages }}"
-      register: dnf_results
-      failed_when: false
-
-    - name: Update YUM cache (legacy RedHat family)
-      when: ansible_facts.os_family == 'RedHat' and ansible_pkg_mgr == 'yum' and os_packages | length > 0
-      ansible.builtin.yum:
-        update_cache: true
-
-    - name: Install packages with YUM (continue on errors)
-      when: ansible_facts.os_family == 'RedHat' and ansible_pkg_mgr == 'yum' and os_packages | length > 0
-      ansible.builtin.yum:
-        name: "{{ item }}"
-        state: present
-        update_cache: false
-      loop: "{{ os_packages }}"
-      register: yum_results
-      failed_when: false
-
-    # -------- Arch / Manjaro (pacman) --------
-    - name: Update pacman cache (Arch)
+    - name: Arch/Manjaro tasks
+      ansible.builtin.include_tasks: tasks/arch.yml
       when: ansible_facts.os_family == 'Archlinux' and os_packages | length > 0
-      community.general.pacman:
-        update_cache: true
 
-    - name: Install packages with pacman (continue on errors)
-      when: ansible_facts.os_family == 'Archlinux' and os_packages | length > 0
-      community.general.pacman:
-        name: "{{ item }}"
-        state: present
-        update_cache: false
-      loop: "{{ os_packages }}"
-      register: pacman_results
-      failed_when: false
-
-    # -------- Alpine (apk) --------
-    - name: Update apk cache (Alpine)
+    - name: Alpine tasks
+      ansible.builtin.include_tasks: tasks/alpine.yml
       when: ansible_facts.os_family == 'Alpine' and os_packages | length > 0
-      community.general.apk:
-        update_cache: true
 
-    - name: Install packages with apk (continue on errors)
-      when: ansible_facts.os_family == 'Alpine' and os_packages | length > 0
-      community.general.apk:
-        name: "{{ item }}"
-        state: present
-        update_cache: false
-      loop: "{{ os_packages }}"
-      register: apk_results
-      failed_when: false
+    - name: macOS (Homebrew) tasks
+      ansible.builtin.include_tasks: tasks/darwin.yml
+      when: ansible_facts.os_family == 'Darwin' and os_packages | length > 0
 
-    # --- macOS (Homebrew) ---
-    - name: Install packages on macOS 
-      when: ansible_facts.os_family == 'Darwin'
-      community.general.homebrew:
-        name: "{{ item }}"
-        state: present
-      loop: "{{ os_packages }}"
-      register: brew_results
-      failed_when: false
-
-
-    # --- Flatpaks ---
-    - name: Ensure Flatpak installed (Linux)
+    - name: Flatpaks (Linux only)
+      ansible.builtin.include_tasks: tasks/flatpaks.yml
       when: ansible_facts.os_family != 'Darwin' and flatpak_packages | length > 0
-      ansible.builtin.package:
-        name: flatpak
-        state: present
-      failed_when: false
 
-    - name: Ensure Flathub remote present
-      when: ansible_facts.os_family != 'Darwin' and flatpak_packages | length > 0
-      community.general.flatpak_remote:
-        name: flathub
-        state: present
-        flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
-        method: "{{ flatpak_install_method }}"
-      become: "{{ flatpak_install_method == 'system' }}"
-      failed_when: false
-
-    - name: Install Flatpak apps (continue on errors)
-      when: ansible_facts.os_family != 'Darwin' and flatpak_packages | length > 0
-      community.general.flatpak:
-        name: "{{ item }}"
-        state: present
-        method: "{{ flatpak_install_method }}"
-        remote: flathub
-      loop: "{{ flatpak_packages }}"
-      register: flatpak_results
-      failed_when: false
-      become: "{{ flatpak_install_method == 'system' }}"
-
-
-    # -------- One-line failure summary --------
+    # One-line failure summary
     - name: Summarize failed installs
       vars:
         failed_apt:      "{{ (apt_results.results      | selectattr('rc','defined') | selectattr('rc','ne',0) | map(attribute='item') | list) if (apt_results      is defined and apt_results.results      is defined) else [] }}"

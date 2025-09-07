@@ -1,0 +1,13 @@
+
+- name: Refresh zypper metadata
+  ansible.builtin.command: zypper -n ref
+  changed_when: false
+
+- name: Install packages (zypper, continue on errors)
+  community.general.zypper:
+    name: "{{ item }}"
+    state: present
+    update_cache: false
+  loop: "{{ os_packages }}"
+  register: zypper_results
+  failed_when: false

@@ -1,0 +1,13 @@
+
+- name: Update apk cache
+  community.general.apk:
+    update_cache: true
+
+- name: Install packages (apk, continue on errors)
+  community.general.apk:
+    name: "{{ item }}"
+    state: present
+    update_cache: false
+  loop: "{{ os_packages }}"
+  register: apk_results
+  failed_when: false

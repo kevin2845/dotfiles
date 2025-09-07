@@ -1,0 +1,12 @@
+- name: Update APT cache
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install packages (APT, continue on errors)
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: false
+  loop: "{{ os_packages }}"
+  register: apt_results
+  failed_when: false

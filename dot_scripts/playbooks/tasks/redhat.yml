@@ -1,0 +1,30 @@
+
+- name: Update DNF cache
+  when: ansible_pkg_mgr == 'dnf'
+  ansible.builtin.dnf:
+    update_cache: true
+
+- name: Install packages (DNF, continue on errors)
+  when: ansible_pkg_mgr == 'dnf'
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+    update_cache: false
+  loop: "{{ os_packages }}"
+  register: dnf_results
+  failed_when: false
+
+- name: Update YUM cache
+  when: ansible_pkg_mgr == 'yum'
+  ansible.builtin.yum:
+    update_cache: true
+
+- name: Install packages (YUM, continue on errors)
+  when: ansible_pkg_mgr == 'yum'
+  ansible.builtin.yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: false
+  loop: "{{ os_packages }}"
+  register: yum_results
+  failed_when: false
