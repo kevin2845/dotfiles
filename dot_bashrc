@@ -1,5 +1,8 @@
 export EDITOR='nvim'
 
+#Install packages for dev environement
+alias kevpkg='~/.scripts/install-packages.sh'
+
 #alias ls='exa '
 alias ll='exa -l -h --git'
 alias la='exa -a'
@@ -8,6 +11,8 @@ alias ltl='exa -T -L'
 alias ltd='exa -T -l -h --git'
 alias ce='chezmoi edit --watch'
 alias bat='batcat'
+
+alias sesh='~/.scripts/tmux-sessionizer.sh'
 
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
