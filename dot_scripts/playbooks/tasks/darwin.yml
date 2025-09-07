@@ -1,0 +1,8 @@
+
+- name: Install packages (Homebrew, continue on errors)
+  community.general.homebrew:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ os_packages }}"
+  register: brew_results
+  failed_when: false

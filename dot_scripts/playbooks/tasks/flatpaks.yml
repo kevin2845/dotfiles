@@ -1,0 +1,26 @@
+
+- name: Ensure Flatpak installed
+  ansible.builtin.package:
+    name: flatpak
+    state: present
+  failed_when: false
+
+- name: Ensure Flathub remote present
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+    method: "{{ flatpak_install_method }}"
+  become: "{{ flatpak_install_method == 'system' }}"
+  failed_when: false
+
+- name: Install Flatpak apps (continue on errors)
+  community.general.flatpak:
+    name: "{{ item }}"
+    state: present
+    method: "{{ flatpak_install_method }}"
+    remote: flathub
+  loop: "{{ flatpak_packages }}"
+  register: flatpak_results
+  failed_when: false
+  become: "{{ flatpak_install_method == 'system' }}"

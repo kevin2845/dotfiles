@@ -1,0 +1,13 @@
+
+- name: Update pacman cache
+  community.general.pacman:
+    update_cache: true
+
+- name: Install packages (pacman, continue on errors)
+  community.general.pacman:
+    name: "{{ item }}"
+    state: present
+    update_cache: false
+  loop: "{{ os_packages }}"
+  register: pacman_results
+  failed_when: false

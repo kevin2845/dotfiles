@@ -1,6 +1,6 @@
 #Install packages for dev environement
-alias kevpkg='~/.scripts/install-packages.sh'
-alias kevsrc='source ~/.bashrc'
+alias kevpkg="$HOME/.scripts/install-packages.sh"
+alias kevsrc='source $HOME/.bashrc'
 
 
 #stuff that annoys me
@@ -18,4 +18,4 @@ alias ce='chezmoi edit --watch'
 
 
 # scripts
-alias sesh='~/.scripts/tmux-sessionizer.sh'
+alias sesh='$HOME/.scripts/tmux-sessionizer.sh'
