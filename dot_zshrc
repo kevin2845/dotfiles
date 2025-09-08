@@ -25,14 +25,20 @@ cd() {
 export PATH="~/.scripts/:$PATH"
 export PATH="/usr/Python/3.11/bin/:$PATH"
 alias sesh='bash ~/.scripts/tmux-sessionizer.sh'
-alias cheat='bash ~/.scripts/tmux-cht.sh'
-alias update='bash ~/.scripts/autoupdate.sh'
 alias newssh='bash ~/.scripts/sshtmux.sh'
-alias ls='lsd'
-alias l='ls -l'
-alias la='ls -a'
-alias lla='ls -la'
-alias lt='ls --tree'
+
+alias python='python3'
+alias please='sudo $(history -p "!!")'
+
+alias ls='eza --icons -F -x'
+alias l='eza --icons -F -1'
+alias ll='eza --icons -l -h -a --git'
+alias la='eza --icons -a'
+# alias lt='eza -T -L 2'
+alias lt='eza -T -L'
+alias ltd='eza -T -l -h --git'
+alias ce='chezmoi edit --watch'
+# alias bat='batcat'
 
 
 alias kevpkg="$HOME/.scripts/install-packages.sh"
