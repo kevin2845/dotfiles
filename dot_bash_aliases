@@ -2,16 +2,17 @@
 alias kevpkg="$HOME/.scripts/install-packages.sh"
 alias kevsrc='source $HOME/.bashrc'
 alias kevupd='$HOME/.scripts/update.sh'
-alias chap='chezmoi apply'
+alias chap='chezmoi apply && kevsrc'
 
 
 #stuff that annoys me
 alias python='python3'
 alias please='sudo $(history -p "!!")'
 
-# alias ls='eza '
-alias ll='eza -l -h -a --git'
-alias la='eza -a'
+alias ls='eza --icons -F -x'
+alias l='eza --icons -F -1'
+alias ll='eza --icons -l -h -a --git'
+alias la='eza --icons -a'
 # alias lt='eza -T -L 2'
 alias lt='eza -T -L'
 alias ltd='eza -T -l -h --git'
