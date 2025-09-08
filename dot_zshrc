@@ -34,6 +34,12 @@ alias la='ls -a'
 alias lla='ls -la'
 alias lt='ls --tree'
 
+
+alias kevpkg="$HOME/.scripts/install-packages.sh"
+alias kevsrc='source $HOME/.bashrc'
+alias kevupd='$HOME/.scripts/update.sh'
+alias chap='chezmoi apply && kevsrc'
+
 alias timeout='gtimeout'
 
 alias tfsecrets='~/.scripts/terraform-secrets.sh'
