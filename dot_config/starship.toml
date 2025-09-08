@@ -1,71 +1,28 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# format ="""
-#  $os\
-# $username\
-# $hostname\
-# $directory\
-# $git_branch\
-# $git_status\
-# $aws\
-# $buf\
-# $c\
-# $conda\
-# $dart\
-# $elixir\
-# $elm\
-# $golang\
-# $haskell\
-# $haxe\
-# $hg_branch\
-# $java\
-# $julia\
-# $lua\
-# $meson\
-# $nim\
-# $nodejs\
-# $pijul_channel\
-# $python\
-# $rlang\
-# $ruby\
-# $rust\
-# $scala\
-# $package\
-# $docker_context\
-# $line_break$character\
-# """
+
+add_newline = true
+command_timeout = 2000
+
 format ="""
+$env_var\
+$os\
 $username\
 $hostname\
+$kubernetes\
 $directory\
 $git_branch\
 $git_status\
-$aws\
-$buf\
 $c\
-$conda\
-$dart\
-$elixir\
-$elm\
 $golang\
 $haskell\
-$haxe\
-$hg_branch\
 $java\
-$julia\
 $lua\
-$meson\
-$nim\
 $nodejs\
-$pijul_channel\
 $python\
-$rlang\
-$ruby\
 $rust\
-$scala\
-$package\
-$docker_context\
-$character\
+$docker_context
+$character
 """
 
 palette = 'gruvbox_dark'
@@ -83,7 +40,7 @@ color_red = '#cc241d'
 color_yellow = '#d79921'
 
 [os]
-disabled = false
+disabled = true
 style = "fg:color_green"
 
 [username]
@@ -95,12 +52,13 @@ format = '[$user]($style) '
 [hostname]
 ssh_symbol = " "
 style = "color_green"
-format = ' at [$ssh_symbol$hostname]($style) '
+format = 'at [$ssh_symbol$hostname]($style) '
 
 [directory]
 style = "color_blue"
-format = "[$path]($style) "
-read_only = " 󰌾"
+format = "[$path]($style)[$read_only]($style) "
+home_symbol = '~'
+read_only = ' '
 
 [git_branch]
 symbol = ""
@@ -111,7 +69,31 @@ format = '[$symbol $branch ]($style)'
 style = "color_orange"
 format = '[($all_status$ahead_behind )]($style)'
 
-#Nerd Fonts
+
+[character]
+disabled = false
+success_symbol = '[❯](bold fg:color_aqua)'
+error_symbol = '[❯](bold fg:color_red)'
+vimcmd_symbol = '[](bold fg:color_green)'
+vimcmd_replace_one_symbol = '[](bold fg:color_purple)'
+vimcmd_replace_symbol = '[](bold fg:color_purple)'
+vimcmd_visual_symbol = '[](bold fg:color_yellow)'
+
+[line_break]
+disabled = false
+
+
+[directory.substitutions]
+"Documents" = "󰈙 Documents"
+"Downloads" = " Downloads"
+"Music" = "󰝚 Music"
+"Pictures" = " Pictures"
+"Developer" = "󰲋 Developer"
+"Desktop" = " Desktop"
+
+
+# NerdFont Languages
+
 [aws]
 symbol = " "
 style = "color_yellow"
@@ -140,30 +122,42 @@ format = '[$symbol( $context) ]($style)'
 symbol = " "
 style = "color_yellow"
 
-[elm]
-symbol = " "
-
-[fossil_branch]
-symbol = " "
-
-[golang]
-symbol = " "
-style = "color_yellow"
-
-[guix_shell]
-symbol = " "
-
-[haskell]
-symbol = ""
+[python]
+symbol = ""
 style = "color_yellow"
 version_format = "v${major}.${minor}"
-format = '[$symbol Haskell $version ]($style)'
+format = '[$symbol Python $version ]($style)'
 
-[haxe]
-symbol = " "
+[rlang]
+symbol = "󰟔"
+style = "color_yellow"
+version_format = "v${major}.${minor}"
+format = '[$symbol R $version ]($style)'
 
-[hg_branch]
-symbol = " "
+[ruby]
+symbol = ""
+style = "color_yellow"
+version_format = "v${major}.${minor}"
+format = '[$symbol Ruby $version ]($style)'
+
+[rust]
+symbol = ""
+style = "color_yellow"
+version_format = "v${major}.${minor}"
+format = '[$symbol Rust $version ]($style)'
+
+[scala]
+symbol = ""
+style = "color_yellow"
+version_format = "v${major}.${minor}"
+format = '[$symbol Scala $version ]($style)'
+
+[nodejs]
+symbol = ""
+style = "color_yellow"
+version_format = "v${major}.${minor}"
+format = '[$symbol Nodejs $version ]($style)'
+
 
 [java]
 symbol = ""
@@ -183,6 +177,40 @@ style = "color_yellow"
 version_format = "v${major}.${minor}"
 format = '[$symbol Lua $version ]($style)'
 
+
+[golang]
+symbol = " "
+style = "color_yellow"
+
+
+[haskell]
+symbol = ""
+style = "color_yellow"
+version_format = "v${major}.${minor}"
+format = '[$symbol Haskell $version ]($style)'
+
+
+#Nerd Fonts
+[kubernetes]
+format = 'via [󱃾 $context\($namespace\)](bold purple) '
+disabled = false
+
+[elm]
+symbol = " "
+
+[fossil_branch]
+symbol = " "
+
+[guix_shell]
+symbol = " "
+
+
+[haxe]
+symbol = " "
+
+[hg_branch]
+symbol = " "
+
 [memory_usage]
 symbol = "󰍛 "
 
@@ -194,12 +222,6 @@ symbol = "󰆥 "
 
 [nix_shell]
 symbol = " "
-
-[nodejs]
-symbol = ""
-style = "color_yellow"
-version_format = "v${major}.${minor}"
-format = '[$symbol Nodejs $version ]($style)'
 
 [os.symbols]
 Alpaquita = " "
@@ -247,56 +269,3 @@ symbol = "󰏗 "
 
 [pijul_channel]
 symbol = " "
-
-[python]
-symbol = ""
-style = "color_yellow"
-version_format = "v${major}.${minor}"
-format = '[$symbol Python $version ]($style)'
-
-[rlang]
-symbol = "󰟔"
-style = "color_yellow"
-version_format = "v${major}.${minor}"
-format = '[$symbol R $version ]($style)'
-
-[ruby]
-symbol = ""
-style = "color_yellow"
-version_format = "v${major}.${minor}"
-format = '[$symbol Ruby $version ]($style)'
-
-[rust]
-symbol = ""
-style = "color_yellow"
-version_format = "v${major}.${minor}"
-format = '[$symbol Rust $version ]($style)'
-
-[scala]
-symbol = ""
-style = "color_yellow"
-version_format = "v${major}.${minor}"
-format = '[$symbol Scala $version ]($style)'
-
-[character]
-disabled = false
-# success_symbol = '[](bold fg:color_green)'
-# error_symbol = '[](bold fg:color_red)'
-success_symbol = '[❯](bold fg:color_aqua)'
-error_symbol = '[❯](bold fg:color_red)'
-vimcmd_symbol = '[](bold fg:color_green)'
-vimcmd_replace_one_symbol = '[](bold fg:color_purple)'
-vimcmd_replace_symbol = '[](bold fg:color_purple)'
-vimcmd_visual_symbol = '[](bold fg:color_yellow)'
-
-[line_break]
-disabled = false
-
-
-[directory.substitutions]
-"Documents" = "󰈙 Documents"
-"Downloads" = " Downloads"
-"Music" = "󰝚 Music"
-"Pictures" = " Pictures"
-"Developer" = "󰲋 Developer"
-"Desktop" = " Desktop"
