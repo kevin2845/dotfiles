@@ -16,6 +16,7 @@
       - chezmoi
       - flatpak
       - neovim
+      - ripgrep
 
       # Applications
       - alacritty
