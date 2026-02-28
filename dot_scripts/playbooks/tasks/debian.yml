@@ -29,11 +29,11 @@
   failed_when: false
 
 - name: apt install packages (continue on errors)
-  when: pkg_mode == 'install' and os_packages | length > 0
+  when: pkg_mode == 'install' and final_packages | length > 0
   ansible.builtin.apt:
     name: "{{ item }}"
     state: present
     update_cache: false
-  loop: "{{ os_packages }}"
+  loop: "{{ final_packages | default([]) }}"
   register: apt_results
   failed_when: false

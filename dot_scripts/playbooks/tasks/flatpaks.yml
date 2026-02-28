@@ -7,7 +7,7 @@
 
 
 - name: ensure flathub remote
-  when: pkg_mode == 'install' and flatpak_packages | length > 0
+  when: pkg_mode == 'install' and (flatpak_packages | default([], true) | length > 0)
   community.general.flatpak_remote:
     name: flathub
     state: present
@@ -40,13 +40,13 @@
 
 
 - name: install flatpak apps (continue on errors)
-  when: pkg_mode == 'install' and flatpak_packages | length > 0
+  when: pkg_mode == 'install' and (flatpak_packages | default([], true) | length > 0)
   community.general.flatpak:
     name: "{{ item }}"
     state: present
     method: "{{ flatpak_install_method }}"
     remote: flathub
-  loop: "{{ flatpak_packages }}"
+  loop: "{{ flatpak_packages | default([], true) }}"
   register: flatpak_results
   failed_when: false
   become: "{{ flatpak_install_method == 'system' }}"

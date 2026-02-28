@@ -50,21 +50,21 @@
   failed_when: false
 
 - name: dnf install packages (continue on errors)
-  when: pkg_mode == 'install' and ansible_pkg_mgr == 'dnf' and os_packages | length > 0
+  when: pkg_mode == 'install' and ansible_pkg_mgr == 'dnf' and final_packages | length > 0
   ansible.builtin.dnf:
     name: "{{ item }}"
     state: present
     update_cache: false
-  loop: "{{ os_packages }}"
+  loop: "{{ final_packages }}"
   register: dnf_results
   failed_when: false
 
 - name: yum install packages (continue on errors)
-  when: pkg_mode == 'install' and ansible_pkg_mgr == 'yum' and os_packages | length > 0
+  when: pkg_mode == 'install' and ansible_pkg_mgr == 'yum' and final_packages | length > 0
   ansible.builtin.yum:
     name: "{{ item }}"
     state: present
     update_cache: false
-  loop: "{{ os_packages }}"
+  loop: "{{ final_packages | default([]) }}"
   register: yum_results
   failed_when: false
