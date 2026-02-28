@@ -29,7 +29,7 @@
       - eza
       - fastfetch
       - bat
-      - starship
+      # - starship
       
       # Networking
       - nmap
