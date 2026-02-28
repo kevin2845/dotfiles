@@ -54,7 +54,6 @@
       - whois
       - arp-scan
       - ethtool
-      - iperf3
       - fping
       - gping
 
@@ -65,9 +64,6 @@
       - clang
       - python3
       - ansible-lint
-      - shellcheck
-      - yamllint
-      - pre-commit
       - nodejs
       - npm
       - rustup
