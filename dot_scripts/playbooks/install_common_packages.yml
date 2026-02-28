@@ -40,6 +40,9 @@
       - lazygit
       - flatpak
 
+      #need this for Wayland, need to implement check for wl or x11
+      # - wl-clipboard
+
       # Better CLI
       - eza
       - fastfetch
