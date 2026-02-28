@@ -3,6 +3,9 @@ mapped_packages:
   - telnet
   - golang
   - docker
+  - fd
+  - dnsutils
+  - iproute
 
 package_map:
   netcat:
@@ -36,3 +39,27 @@ package_map:
     RedHat: docker
     Suse: docker
     # Darwin: docker
+
+  fd:
+    Alpine: fd-find
+    Archlinux: fd
+    Darwin: fd
+    Debian: fd-find
+    RedHat: fd-find
+    Suse: fd
+
+  dnsutils:
+    Debian: dnsutils
+    RedHat: bind-utils
+    Suse: bind-utils
+    Archlinux: bind
+    Alpine: bind-tools
+    Darwin: bind
+
+  iproute:
+    Debian: iproute2
+    RedHat: iproute
+    Suse: iproute2
+    Archlinux: iproute2
+    Alpine: iproute2
+    Darwin: iproute2mac 
