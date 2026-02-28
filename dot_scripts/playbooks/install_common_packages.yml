@@ -55,8 +55,8 @@
       - rustup
     
 
-    flatpak_packages:
-      - com.bitwarden.desktop
+    flatpak_packages: []
+      # - com.bitwarden.desktop
     flatpak_install_method: user
   vars_files:
     - "vars/common.yml"
