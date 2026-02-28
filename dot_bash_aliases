@@ -36,5 +36,5 @@ alias ce='chezmoi edit --watch'
 
 # scripts
 alias sesh='$HOME/.scripts/tmux-sessionizer.sh'
-alias sweep-dns='./.scripts/sweep-dns.sh' 
-alias sweep-ip='./.scripts/sweep-ip.sh'
+alias sweep-dns='$HOME/.scripts/sweep-dns.sh' 
+alias sweep-ip='$HOME/.scripts/sweep-ip.sh'
