@@ -52,8 +52,6 @@
       - traceroute
       - net-tools
       - whois
-      - snmp
-      - snmp-mibs-downloader
       - arp-scan
       - ethtool
       - iperf3
@@ -66,8 +64,6 @@
       - gcc
       - clang
       - python3
-      - python3-pip
-      - pipx
       - ansible-lint
       - shellcheck
       - yamllint
@@ -75,8 +71,6 @@
       - nodejs
       - npm
       - rustup
-      - yarn
-      - pwsh
     
 
     flatpak_packages: []

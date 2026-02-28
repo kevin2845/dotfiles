@@ -6,6 +6,11 @@ mapped_packages:
   - fd
   - dnsutils
   - iproute
+  - snmp
+  - python3-pip
+  - pipx
+  - yarn
+  - iperf3
 
 package_map:
   netcat:
@@ -63,3 +68,37 @@ package_map:
     Archlinux: iproute2
     Alpine: iproute2
     Darwin: iproute2mac 
+
+  snmp:
+    Debian: snmp
+    Archlinux: net-snmp
+    RedHat: [net-snmp, net-snmp-utils]
+    Suse: net-snmp
+    Alpine: net-snmp
+    Darwin: net-snmp
+
+  python3-pip:
+    Debian: python3-pip
+    Archlinux: python-pip
+    RedHat: python3-pip
+    Suse: python3-pip
+    Alpine: py3-pip
+    Darwin: python
+
+  pipx:
+    Debian: pipx
+    Archlinux: python-pipx
+    RedHat: pipx
+    Suse: pipx   
+    Alpine: pipx 
+    Darwin: pipx
+
+  yarn:
+    Debian: yarn
+    Archlinux: yarn
+    RedHat: yarnpkg
+    Suse: yarn
+    Alpine: yarn
+    Darwin: yarn
+
+
