@@ -12,9 +12,17 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
--- Additional autocommands can be added here
--- Examples:
--- - Format on save
--- - Auto-reload config files
--- - Custom file type detection
--- - etc.
+vim.api.nvim_create_autocmd("User", {
+  pattern = "LazyUpdate",
+  group = vim.api.nvim_create_augroup("chezmoi_update_lock", { clear = true }),
+  callback = function()
+    local lock_file = vim.fn.stdpath("config") .. "/lazy-lock.json"
+
+    -- A)chezmoi SOURCE to track the new lock:
+    vim.fn.system({ "chezmoi", "add", lock_file })
+
+    -- B)Force APPLY the lock from chezmoi source to target:
+    -- vim.fn.system({ "chezmoi", "apply", lock_file })
+  end,
+})
+
