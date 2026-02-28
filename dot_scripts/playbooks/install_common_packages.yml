@@ -16,21 +16,29 @@
     pkg_mode: install  
     common_packages:
       # common
-      - git
       - curl
+      - wget
+      - git
+      - vim
+      - neovim
+      - nano
       - htop
+      - btop
+      - tmux
+      - tree
+      - unzip
+      - zip
+      - rsync
+      - jq
+      - yq
+      - fzf
+      - ripgrep
+      - ncdu
+      - lsof
+      - strace
+      - tcpdump
       - lazygit
       - flatpak
-      - neovim
-      - ripgrep
-      - whois
-
-      # Applications
-      # - alacritty
-
-      # tmux helpers
-      - tmux
-      - fzf
 
       # Better CLI
       - eza
@@ -41,6 +49,14 @@
       # Networking
       - nmap
       - mtr
+      - traceroute
+      - net-tools
+      - whois
+      - snmp
+      - snmp-mibs-downloader
+      - arp-scan
+      - ethtool
+      - iperf3
       - fping
       - gping
 
@@ -51,27 +67,42 @@
       - clang
       - python3
       - python3-pip
+      - pipx
+      - ansible-lint
+      - shellcheck
+      - yamllint
+      - pre-commit
       - nodejs
       - npm
       - rustup
       - yarn
+      - pwsh
     
 
     flatpak_packages: []
-      # - com.bitwarden.desktop
+    # flatpak_packages:
+    #   - com.bitwarden.desktop
     flatpak_install_method: user
   vars_files:
     - "vars/common.yml"
 
   tasks:
-    - name: Resolve mapped package names for this OS family (robust)
+    - name: Resolve mapped package names for this OS family
       ansible.builtin.set_fact:
-        mapped_resolved_packages: "{{ mapped_resolved_packages | default([]) + [package_map[item][ansible_facts.os_family]] }}"
+        mapped_resolved_packages: >-
+          {{
+            (mapped_resolved_packages | default([]))
+            + (
+                (package_map[item][ansible_facts.os_family])
+                if (package_map[item][ansible_facts.os_family] is sequence and package_map[item][ansible_facts.os_family] is not string)
+                else [package_map[item][ansible_facts.os_family]]
+              )
+          }}
       loop: "{{ mapped_packages }}"
       when:
         - package_map[item] is defined
         - package_map[item][ansible_facts.os_family] is defined
-    
+        
     - name: Set working list
       ansible.builtin.set_fact:
         final_packages: >-
