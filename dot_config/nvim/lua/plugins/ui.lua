@@ -119,10 +119,16 @@ return {
 	},
 
 	-- Colorizer for hex colors
-	{
-		"NvChad/nvim-colorizer.lua",
-		opts = {},
-	},
+	-- {
+	-- 	"NvChad/nvim-colorizer.lua",
+	-- 	opts = {
+ --            parsers = { "*" },
+ --            display = {
+ --                mode = "background",
+ --            },
+ --        }
+	--
+	-- },
 
 	-- Treesitter for syntax highlighting
 	{
