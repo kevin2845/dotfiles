@@ -39,6 +39,7 @@
       - tcpdump
       - lazygit
       - flatpak
+      # - wikiman
 
       #need this for Wayland, need to implement check for wl or x11
       # - wl-clipboard
