@@ -7,7 +7,13 @@ alias chap='chezmoi apply && source "$HOME/.bashrc"'
 
 #stuff that annoys me
 alias python='python3'
+
+#QoL
 alias please='sudo $(history -p "!!")'
+
+#Sudo QoL
+alias zypper='sudo zypper'
+
 
 # ls alias with checks
 if command -v eza >/dev/null 2>&1; then
@@ -30,3 +36,5 @@ alias ce='chezmoi edit --watch'
 
 # scripts
 alias sesh='$HOME/.scripts/tmux-sessionizer.sh'
+alias sweep-dns='./.scripts/sweep-dns.sh' 
+alias sweep-ip='./.scripts/sweep-ip.sh'
