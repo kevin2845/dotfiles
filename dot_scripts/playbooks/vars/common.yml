@@ -1,0 +1,38 @@
+mapped_packages:
+  - netcat
+  - telnet
+  - golang
+  - docker
+
+package_map:
+  netcat:
+    Alpine: netcat-openbsd
+    Archlinux: gnu-netcat
+    Darwin: netcat
+    Debian: netcat-openbsd
+    RedHat: nmap-ncat
+    Suse: netcat-openbsd
+
+  telnet:
+    Alpine: busybox-extras
+    Archlinux: inetutils
+    Darwin: inetutils
+    Debian: telnet
+    RedHat: telnet
+    Suse: telnet
+
+  golang:
+    Alpine: go
+    Archlinux: go
+    Darwin: go
+    Debian: golang
+    RedHat: golang
+    Suse: go
+
+  docker:
+    Alpine: docker
+    Archlinux: docker
+    Debian: docker.io
+    RedHat: docker
+    Suse: docker
+    # Darwin: docker

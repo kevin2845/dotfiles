@@ -20,13 +20,12 @@
       - curl
       - htop
       - lazygit
-      - chezmoi
       - flatpak
       - neovim
       - ripgrep
 
       # Applications
-      - alacritty
+      # - alacritty
 
       # tmux helpers
       - tmux
@@ -40,9 +39,7 @@
       
       # Networking
       - nmap
-      - netcat
       - mtr
-      - telnet
       - fping
       - gping
 
@@ -55,22 +52,32 @@
       - python3-pip
       - nodejs
       - npm
-      - yarn
-      - golang
       - rustup
-      - docker
     
 
     flatpak_packages:
       - com.bitwarden.desktop
     flatpak_install_method: user
   vars_files:
-    - "vars/{{ os_vars_map[ansible_facts.os_family] }}.yml"
+    - "vars/common.yml"
 
   tasks:
+    - name: Resolve mapped package names for this OS family (robust)
+      ansible.builtin.set_fact:
+        mapped_resolved_packages: "{{ mapped_resolved_packages | default([]) + [package_map[item][ansible_facts.os_family]] }}"
+      loop: "{{ mapped_packages }}"
+      when:
+        - package_map[item] is defined
+        - package_map[item][ansible_facts.os_family] is defined
+    
     - name: Set working list
       ansible.builtin.set_fact:
-        final_packages: "{{ (common_packages + (os_specific_packages | default([]))) | unique }}"
+        final_packages: >-
+          {{
+            (common_packages | default([]))
+            + (mapped_resolved_packages | default([]))
+            | unique
+          }}
 
     - name: Debian/Ubuntu tasks
       ansible.builtin.include_tasks: tasks/debian.yml
