@@ -88,13 +88,6 @@ else
   echo "curl not found (install: sudo apt install curl)"
 fi
 
-# ---- GeoIP local db (optional) ----
-section "GeoIP (local database, optional)"
-if have geoiplookup; then
-  geoiplookup "$ip" || true
-else
-  echo "geoiplookup not found (optional install: sudo apt install geoip-bin)"
-fi
 
 # ---- TLS peek (optional) ----
 section "TLS certificate peek (if 443 reachable)"
