@@ -101,4 +101,11 @@ package_map:
     Alpine: yarn
     Darwin: yarn
 
+  iperf3:
+    Debian: iperf3
+    Archlinux: iperf3
+    RedHat: iperf3
+    Suse: iperf   # if this still fails, change to iperf
+    Alpine: iperf3
+    Darwin: iperf3
 
