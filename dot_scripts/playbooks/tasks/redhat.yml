@@ -5,6 +5,22 @@
     update_cache: true
   failed_when: false
 
+- name: RedHat | Enable lazygit COPR
+  ansible.builtin.command: dnf -y copr enable dejan/lazygit
+  args:
+    creates: /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:dejan:lazygit.repo
+  when:
+    - ansible_pkg_mgr in ['dnf', 'dnf5']
+    - "'lazygit' in final_packages"
+
+- name: RedHat | Enable gping COPR
+  ansible.builtin.command: dnf -y copr enable atim/gping
+  args:
+    creates: /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:atim:gping.repo
+  when:
+    - ansible_pkg_mgr in ['dnf', 'dnf5']
+    - "'gping' in final_packages"
+
 - name: dnf check-update
   when: pkg_mode == 'update' and ansible_pkg_mgr in ['dnf', 'dnf5']
   ansible.builtin.command: dnf -q check-update
