@@ -1,7 +1,6 @@
 --[[
-  Kevin's Neovim Configuration
-  Based on Kickstart.nvim with ThePrimeagen-style customizations
-  
+  Neovim Configuration
+  Based on Kickstart.nvim
   Entry point - loads all configuration modules
 --]]
 
