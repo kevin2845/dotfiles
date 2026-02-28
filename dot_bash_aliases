@@ -13,6 +13,7 @@ alias please='sudo $(history -p "!!")'
 
 #Sudo QoL
 alias zypper='sudo zypper'
+alias dnf='sudo dnf'
 
 
 # ls alias with checks
