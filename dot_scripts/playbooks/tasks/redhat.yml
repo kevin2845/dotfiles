@@ -6,19 +6,19 @@
   failed_when: false
 
 - name: dnf check-update
-  when: pkg_mode == 'update' and ansible_pkg_mgr == 'dnf'
+  when: pkg_mode == 'update' and ansible_pkg_mgr in ['dnf', 'dnf5']
   ansible.builtin.command: dnf -q check-update
   register: dnf_check
   changed_when: false
   failed_when: dnf_check.rc not in [0, 100]
 
 - name: Show pending updates (DNF)
-  when: pkg_mode == 'update' and ansible_pkg_mgr == 'dnf'
+  when: pkg_mode == 'update' and ansible_pkg_mgr in ['dnf', 'dnf5']
   ansible.builtin.debug:
     msg: "{{ dnf_check.stdout | default('No updates listed') }}"
 
 - name: dnf upgrade all
-  when: pkg_mode == 'upgrade' and ansible_pkg_mgr == 'dnf'
+  when: pkg_mode == 'upgrade' and ansible_pkg_mgr in ['dnf', 'dnf5']
   ansible.builtin.dnf:
     name: "*"
     state: latest
@@ -50,7 +50,7 @@
   failed_when: false
 
 - name: dnf install packages (continue on errors)
-  when: pkg_mode == 'install' and ansible_pkg_mgr == 'dnf' and final_packages | length > 0
+  when: pkg_mode == 'install' and ansible_pkg_mgr in ['dnf', 'dnf5'] and final_packages | length > 0
   ansible.builtin.dnf:
     name: "{{ item }}"
     state: present
