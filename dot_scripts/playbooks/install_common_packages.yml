@@ -54,6 +54,7 @@
       - nodejs
       - npm
       - rustup
+      - yarn
     
 
     flatpak_packages: []
