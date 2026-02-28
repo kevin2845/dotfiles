@@ -23,6 +23,7 @@
       - flatpak
       - neovim
       - ripgrep
+      - whois
 
       # Applications
       # - alacritty
