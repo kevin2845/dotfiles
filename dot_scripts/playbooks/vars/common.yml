@@ -7,7 +7,7 @@ mapped_packages:
 package_map:
   netcat:
     Alpine: netcat-openbsd
-    Archlinux: gnu-netcat
+    Archlinux: netcat
     Darwin: netcat
     Debian: netcat-openbsd
     RedHat: nmap-ncat
