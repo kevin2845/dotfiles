@@ -91,11 +91,39 @@ vim.keymap.set("n", "<leader>W", "<cmd>w<CR>", { desc = "Save file" })
 -- ===========================
 -- SEARCH & UTILITY
 -- ===========================
+-- stylua: ignore start
+
+vim.keymap.set("n", "<leader>e", function() Snacks.explorer() end, { desc = "File [E]xplorer" })
+
+
+vim.keymap.set("n", "<leader>sf", function() require("snacks").smart() end, { desc = "[S]earch [F]iles" })
+vim.keymap.set("n", "<leader>sg", function() require("snacks").grep() end, { desc = "[S]earch by [G]rep" })
+vim.keymap.set("n", "<leader>sb", function() require("snacks").buffers() end, { desc = "[S]earch [B]uffers" })
+vim.keymap.set("n", "<leader>:", function() require("snacks").command_history() end, { desc = ": Command History" })
+vim.keymap.set("n", "<leader>sk", function() require("snacks").picker.keymaps() end, { desc = "[S]earch [K]eymaps" })
+vim.keymap.set("n", "<leader>sw", function() require("snacks").picker.grep_word() end, { desc = "[S]earch [W]ord" })
+vim.keymap.set("n", "<leader>sc", function() require("chezmoi.pick").snacks() end, { desc = "[S]earch [C]onfig Files" })
+-- stylua: ignore end
+
+-- Buffer fuzzy search
+vim.keymap.set("n", "<leader>f", function()
+	require("snacks").picker.lines({
+		title = "Current Buffer",
+		layout = { preset = "dropdown" },
+	})
+end, { desc = "[F]uzzy search current buffer" })
+
+-- Search in open files (buffers)
+vim.keymap.set("n", "<leader>ss", function()
+	require("snacks").picker.grep_buffers({
+		title = "Live Grep in Open Files",
+	})
+end, { desc = "[S]earch in Open Files" })
 
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-vim.keymap.set("n", "<leader>nh", "<cmd>nohlsearch<CR>", { desc = "[N]o [H]ighlight" })
+-- vim.keymap.set("n", "<leader>nh", "<cmd>nohlsearch<CR>", { desc = "[N]o [H]ighlight" })
 vim.keymap.set("n", "<leader>H", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
 
 -- Diagnostic keymaps
