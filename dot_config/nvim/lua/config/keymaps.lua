@@ -34,7 +34,12 @@ vim.keymap.set("n", "<leader>d", '"_d', { desc = "Delete to void register" })
 vim.keymap.set("v", "<leader>d", '"_d', { desc = "Delete to void register" })
 
 -- Replace word under cursor
-vim.keymap.set("n", "<leader>r", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>", { desc = "Replace word under cursor" })
+vim.keymap.set(
+	"n",
+	"<leader>r",
+	":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>",
+	{ desc = "Replace word under cursor" }
+)
 vim.keymap.set("n", "<leader>rw", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>", { desc = "[R]eplace [W]ord" })
 
 -- Visual block mode
@@ -87,6 +92,7 @@ vim.keymap.set("n", "<leader>W", "<cmd>w<CR>", { desc = "Save file" })
 -- SEARCH & UTILITY
 -- ===========================
 
+
 -- Clear highlights on search when pressing <Esc> in normal mode
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 vim.keymap.set("n", "<leader>nh", "<cmd>nohlsearch<CR>", { desc = "[N]o [H]ighlight" })
@@ -132,12 +138,9 @@ vim.keymap.set("n", "<leader>gl", function()
 	vim.cmd("terminal git log --oneline")
 end, { desc = "Git log" })
 
-
-vim.keymap.set("n", "K",          vim.lsp.buf.hover)            -- Hover docs
-vim.keymap.set("n", "gd",         vim.lsp.buf.definition)       -- Go to definition
-vim.keymap.set("n", "gr",         vim.lsp.buf.references)       -- References
-vim.keymap.set("n", "gI",         vim.lsp.buf.implementation)   -- Implementation
-vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename)           -- Rename symbol
-vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action)      -- Code action
-
-
+vim.keymap.set("n", "K", vim.lsp.buf.hover) -- Hover docs
+vim.keymap.set("n", "gd", vim.lsp.buf.definition) -- Go to definition
+vim.keymap.set("n", "gr", vim.lsp.buf.references) -- References
+vim.keymap.set("n", "gI", vim.lsp.buf.implementation) -- Implementation
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename) -- Rename symbol
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action) -- Code action
