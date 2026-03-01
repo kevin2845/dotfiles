@@ -113,12 +113,12 @@ return {
 			end, { desc = "[f] Fuzzily search in current buffer" })
 
 			-- Search in open files
-			vim.keymap.set("n", "<leader>s/", function()
+			vim.keymap.set("n", "<leader>so", function()
 				builtin.live_grep({
 					grep_open_files = true,
 					prompt_title = "Live Grep in Open Files",
 				})
-			end, { desc = "[S]earch [/] in Open Files" })
+			end, { desc = "[S]earch in [O]pen Files" })
 
 			-- Search Neovim config files
 			vim.keymap.set("n", "<leader>sn", function()
@@ -258,6 +258,13 @@ return {
 
 	-- VS Code Tasks
 	{
+		"folke/snacks.nvim",
+		priority = 1000,
+		lazy = false,
+		--- @type snakcs.config
+		opts = {},
+	},
+	{
 		"EthanJWright/vs-tasks.nvim",
 		dependencies = "nvim-lua/popup.nvim",
 		keys = {
@@ -289,43 +296,7 @@ return {
 		dependencies = { "nvim-lua/plenary.nvim" },
 		config = function()
 			require("chezmoi").setup({
-				edit = {
-					watch = false,
-					force = false,
-					ignore_patterns = {
-						"run_onchange_.*",
-						"run_once_.*",
-						"%.chezmoiignore",
-						"%.chezmoitemplate",
-						-- Add custom patterns here
-					},
-				},
-				events = {
-					on_open = {
-						notification = {
-							enable = true,
-							msg = "Opened a chezmoi-managed file",
-							opts = {},
-						},
-					},
-					on_watch = {
-						notification = {
-							enable = true,
-							msg = "This file will be automatically applied",
-							opts = {},
-						},
-					},
-					on_apply = {
-						notification = {
-							enable = true,
-							msg = "Successfully applied",
-							opts = {},
-						},
-					},
-				},
-				telescope = {
-					select = { "<CR>" },
-				},
+				-- your configurations
 			})
 		end,
 	},
