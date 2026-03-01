@@ -56,7 +56,6 @@ return {
 				},
 			},
 			spec = {
-				{ "<leader>f", group = "[F]ind/Format" },
 				{ "<leader>s", group = "[S]earch" },
 				{ "<leader>t", group = "[T]erminal/Toggle" },
 				{ "<leader>w", group = "[W]indow" },
