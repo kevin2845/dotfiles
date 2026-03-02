@@ -57,42 +57,6 @@ return {
 	{
 		"numToStr/Comment.nvim",
 		opts = {},
-		keys = {
-			{
-				"<leader>/",
-				function()
-					require("Comment.api").toggle.linewise.current()
-				end,
-				desc = "Toggle comment line",
-			},
-			{
-				"<leader>/",
-				function()
-					local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
-					vim.api.nvim_feedkeys(esc, "nx", false)
-					require("Comment.api").toggle.linewise(vim.fn.visualmode())
-				end,
-				mode = "v",
-				desc = "Toggle comment selection",
-			},
-			{
-				"<leader>?",
-				function()
-					require("Comment.api").toggle.blockwise.current()
-				end,
-				desc = "Toggle block comment",
-			},
-			{
-				"<leader>?",
-				function()
-					local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
-					vim.api.nvim_feedkeys(esc, "nx", false)
-					require("Comment.api").toggle.blockwise(vim.fn.visualmode())
-				end,
-				mode = "v",
-				desc = "Toggle block comment selection",
-			},
-		},
 	},
 
 	-- Neorg (Note taking)
@@ -149,13 +113,13 @@ return {
             },
         },
 	},
-	{
-		"EthanJWright/vs-tasks.nvim",
-		dependencies = "nvim-lua/popup.nvim",
-		keys = {
-			{ "<leader>'", ":lua require('telescope').extensions.vstask.tasks()<CR>", desc = "VS Code Tasks" },
-		},
-	},
+	-- {
+	-- 	"EthanJWright/vs-tasks.nvim",
+	-- 	dependencies = "nvim-lua/popup.nvim",
+	-- 	keys = {
+	-- 		{ "<leader>'", ":lua require('telescope').extensions.vstask.tasks()<CR>", desc = "VS Code Tasks" },
+	-- 	},
+	-- },
 
 	-- Autotag for JSX/TSX
 	{
