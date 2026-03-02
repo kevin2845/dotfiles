@@ -106,7 +106,6 @@ vim.keymap.set("n", "<leader>sc", function() require("chezmoi.pick").snacks() en
 -- stylua: ignore end
 
 
-
 -- Buffer fuzzy search
 vim.keymap.set("n", "<leader>f", function()
 	require("snacks").picker.lines({

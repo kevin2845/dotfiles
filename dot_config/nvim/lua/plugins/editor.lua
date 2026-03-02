@@ -18,62 +18,6 @@ return {
 				end,
 			},
 			{ "nvim-telescope/telescope-ui-select.nvim" },
-			-- in your Lazy plugin spec list
-			{
-				"nvim-tree/nvim-web-devicons",
-				lazy = true,
-				opts = {
-					-- your personal icons can go here (to override)
-					override = {
-						zsh = {
-							icon = "",
-							color = "#428850",
-							cterm_color = "65",
-							name = "Zsh",
-						},
-					},
-
-					-- globally enable different highlight colors per icon (default true)
-					color_icons = true,
-
-					-- globally enable default icons (default false)
-					default = true,
-
-					-- enable "strict" selection of icons
-					strict = true,
-
-					-- set light/dark variant manually (nil uses background)
-					variant = nil, -- or "light" / "dark"
-
-					-- override icons by filename
-					override_by_filename = {
-						[".gitignore"] = {
-							icon = "",
-							color = "#f1502f",
-							name = "Gitignore",
-						},
-					},
-
-					-- override icons by extension
-					override_by_extension = {
-						["log"] = {
-							icon = "",
-							color = "#81e043",
-							name = "Log",
-						},
-					},
-
-					-- override icons by operating system
-					override_by_operating_system = {
-						["apple"] = {
-							icon = "",
-							color = "#A2AAAD",
-							cterm_color = "248",
-							name = "Apple",
-						},
-					},
-				},
-			},
 		},
 		config = function()
 			require("telescope").setup({
@@ -95,30 +39,6 @@ return {
 		config = function()
 			require("nvim-rooter").setup()
 		end,
-	},
-
-	-- File Explorer (NvimTree)
-	{
-		"nvim-tree/nvim-tree.lua",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		opts = {
-			sync_root_with_cwd = true,
-			respect_buf_cwd = true,
-			update_focused_file = {
-				enable = true,
-				update_root = true,
-			},
-			sort_by = "case_sensitive",
-			view = {
-				width = 30,
-			},
-			renderer = {
-				group_empty = false,
-			},
-			filters = {
-				dotfiles = false,
-			},
-		},
 	},
 
 	-- UndoTree
