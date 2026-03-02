@@ -36,6 +36,7 @@ require("lazy").setup({
 	{ import = "plugins.git" },
 	{ import = "plugins.terminal" },
 	{ import = "plugins.blink" },
+	{ import = "plugins.dashboard" },
 
 	-- Utility plugins that don't need their own modules
 	"NMAC427/guess-indent.nvim", -- Detect tabstop and shiftwidth automatically
