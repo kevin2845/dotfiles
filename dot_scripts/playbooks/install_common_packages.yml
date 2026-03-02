@@ -75,6 +75,7 @@
       - npm
       - rustup
       - luarocks
+      - tree-sitter-cli
     
 
     flatpak_packages: []
