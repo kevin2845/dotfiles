@@ -1,7 +1,7 @@
 alias ..='cd ..'
 
 #Install packages for environement
-alias kevpkg="$HOME/.scripts/install-packages.sh"
+alias kevpkg='$HOME/.scripts/install-packages.sh'
 alias src='source $HOME/.bashrc'
 alias kevupd='$HOME/.scripts/update.sh'
 
@@ -18,6 +18,8 @@ alias zypper='sudo zypper'
 alias dnf='sudo dnf'
 alias pacman='sudo pacman'
 
+alias grep='grep --color=auto'
+
 
 # ls alias with checks
 if command -v eza >/dev/null 2>&1; then
@@ -28,11 +30,11 @@ if command -v eza >/dev/null 2>&1; then
   alias lt='eza -T -L'
   alias ltd='eza -T -l -h --git'
 else
-  alias l='ls -1'
-  alias ll='ls -lah'
-  alias la='ls -A'
-  alias lt='ls'
-  alias ltd='ls -lah'
+  alias l='ls -1 --color=auto'
+  alias ll='ls -lah --colora=auto'
+  alias la='ls -A --color=auto'
+  alias lt='ls --color=auto'
+  alias ltd='ls -lah --color=auto'
 fi
 
 #chezmoi aliases
