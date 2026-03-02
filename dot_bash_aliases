@@ -6,19 +6,20 @@ alias src='source $HOME/.bashrc'
 alias kevupd='$HOME/.scripts/update.sh'
 
 
-
-#stuff that annoys me
-alias python='python3'
+#New cmds
+alias please='sudo $(history -p "!!")'
+alias fastping='ping -c 100 -i 0.2'
 
 #QoL
-alias please='sudo $(history -p "!!")'
-
-#Sudo QoL
 alias zypper='sudo zypper'
 alias dnf='sudo dnf'
 alias pacman='sudo pacman'
-
 alias grep='grep --color=auto'
+alias mv='mv -i'
+alias rm='rm -i'
+alias cp='cp -i'
+alias ln='ln -i'
+alias mkdir='mkdir -pv'
 
 
 # ls alias with checks
@@ -42,8 +43,5 @@ alias cz='chezmoi'
 alias chap='chezmoi apply && source "$HOME/.bashrc"'
 alias chup='chezmoi update && source "$HOME/.bashrc"'
 
-
 # scripts
 alias sesh='$HOME/.scripts/tmux-sessionizer.sh'
-alias sweep-dns='$HOME/.scripts/sweep-dns.sh' 
-alias sweep-ip='$HOME/.scripts/sweep-ip.sh'

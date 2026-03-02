@@ -16,7 +16,7 @@ HISTFILESIZE=2000
 shopt -s checkwinsize
 
 #Bash Aliases
-if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases fi
+[ -f ~/.bash_aliases ] && . ~/.bash_aliases
 
 
 #Bash Prompt Styling
@@ -36,4 +36,5 @@ fi
 
 
 #Paths
+export PATH="$PATH:$HOME/.scripts"
 export PATH="$PATH:$HOME/.cargo/bin"

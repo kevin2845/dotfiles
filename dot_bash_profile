@@ -1,6 +1,4 @@
 #!/bin/sh
 
-export="$PATH:$HOME/.scripts"
-
 export EDITOR='nvim'
 export MANPAGER='nvim +Man!'
