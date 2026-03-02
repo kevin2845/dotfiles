@@ -1,13 +1,12 @@
-alias ..='cd ..'
-
-#Install packages for environement
-alias kevpkg='$HOME/.scripts/install-packages.sh'
-alias src='source $HOME/.bashrc'
-alias kevupd='$HOME/.scripts/update.sh'
+#!/bin/sh
 
 
 #New cmds
+alias kevpkg='$HOME/.scripts/install-packages.sh'
+alias kevupd='$HOME/.scripts/update.sh'
+alias src='source $HOME/.bashrc'
 alias please='sudo $(history -p "!!")'
+alias ..='cd ..'
 alias fastping='ping -c 100 -i 0.2'
 
 #QoL
