@@ -96,14 +96,16 @@ vim.keymap.set("n", "<leader>W", "<cmd>w<CR>", { desc = "Save file" })
 vim.keymap.set("n", "<leader>e", function() Snacks.explorer() end, { desc = "File [E]xplorer" })
 
 
-vim.keymap.set("n", "<leader>sf", function() require("snacks").picker.smart() end, { desc = "[S]earch [F]iles" })
-vim.keymap.set("n", "<leader>sg", function() require("snacks").picker.grep() end, { desc = "[S]earch by [G]rep" })
-vim.keymap.set("n", "<leader>sb", function() require("snacks").picker.buffers() end, { desc = "[S]earch [B]uffers" })
-vim.keymap.set("n", "<leader>:", function() require("snacks").picked.command_history() end, { desc = ": Command History" })
+vim.keymap.set("n", "<leader>sf", function() require("snacks").picker.smart({layout = { preset = "default"}}) end, { desc = "[S]earch [F]iles" })
+vim.keymap.set("n", "<leader>sg", function() require("snacks").picker.grep({layout = { preset = "default"}}) end, { desc = "[S]earch by [G]rep" })
+vim.keymap.set("n", "<leader>sb", function() require("snacks").picker.buffers({layout = { preset = "vscode"}}) end, { desc = "[S]earch [B]uffers" })
+vim.keymap.set("n", "<leader>:", function() require("snacks").picker.command_history() end, { desc = ": Command History" })
 vim.keymap.set("n", "<leader>sk", function() require("snacks").picker.keymaps() end, { desc = "[S]earch [K]eymaps" })
 vim.keymap.set("n", "<leader>sw", function() require("snacks").picker.grep_word() end, { desc = "[S]earch [W]ord" })
 vim.keymap.set("n", "<leader>sc", function() require("chezmoi.pick").snacks() end, { desc = "[S]earch [C]onfig Files" })
 -- stylua: ignore end
+
+
 
 -- Buffer fuzzy search
 vim.keymap.set("n", "<leader>f", function()
