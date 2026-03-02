@@ -4,35 +4,35 @@
 --]]
 
 return {
-	-- Telescope (fuzzy finder)
-	{
-		"nvim-telescope/telescope.nvim",
-		event = "VimEnter",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			{
-				"nvim-telescope/telescope-fzf-native.nvim",
-				build = "make",
-				cond = function()
-					return vim.fn.executable("make") == 1
-				end,
-			},
-			{ "nvim-telescope/telescope-ui-select.nvim" },
-		},
-		config = function()
-			require("telescope").setup({
-				extensions = {
-					["ui-select"] = {
-						require("telescope.themes").get_dropdown(),
-					},
-				},
-			})
-
-			-- Enable Telescope extensions
-			pcall(require("telescope").load_extension, "fzf")
-			pcall(require("telescope").load_extension, "ui-select")
-		end,
-	},
+	-- -- Telescope (fuzzy finder)
+	-- {
+	-- 	"nvim-telescope/telescope.nvim",
+	-- 	event = "VimEnter",
+	-- 	dependencies = {
+	-- 		"nvim-lua/plenary.nvim",
+	-- 		{
+	-- 			"nvim-telescope/telescope-fzf-native.nvim",
+	-- 			build = "make",
+	-- 			cond = function()
+	-- 				return vim.fn.executable("make") == 1
+	-- 			end,
+	-- 		},
+	-- 		{ "nvim-telescope/telescope-ui-select.nvim" },
+	-- 	},
+	-- 	config = function()
+	-- 		require("telescope").setup({
+	-- 			extensions = {
+	-- 				["ui-select"] = {
+	-- 					require("telescope.themes").get_dropdown(),
+	-- 				},
+	-- 			},
+	-- 		})
+	--
+	-- 		-- Enable Telescope extensions
+	-- 		pcall(require("telescope").load_extension, "fzf")
+	-- 		pcall(require("telescope").load_extension, "ui-select")
+	-- 	end,
+	-- },
 	{
 		"notjedi/nvim-rooter.lua",
 		config = function()
@@ -93,13 +93,6 @@ return {
 			},
 		},
 	},
-	-- {
-	-- 	"EthanJWright/vs-tasks.nvim",
-	-- 	dependencies = "nvim-lua/popup.nvim",
-	-- 	keys = {
-	-- 		{ "<leader>'", ":lua require('telescope').extensions.vstask.tasks()<CR>", desc = "VS Code Tasks" },
-	-- 	},
-	-- },
 
 	-- Autotag for JSX/TSX
 	{
