@@ -1,15 +1,10 @@
 alias ..='cd ..'
-alias .2='cd ../..'
-alias .3='cd ../../..'
-alias .4='cd ../../../..'
-alias .5='cd ../../../../..'
 
-#Install packages for dev environement
+#Install packages for environement
 alias kevpkg="$HOME/.scripts/install-packages.sh"
 alias src='source $HOME/.bashrc'
 alias kevupd='$HOME/.scripts/update.sh'
-alias chap='chezmoi apply && source "$HOME/.bashrc"'
-alias chup='chezmoi update && source "$HOME/.bashrc"'
+
 
 
 #stuff that annoys me
@@ -40,7 +35,10 @@ else
   alias ltd='ls -lah'
 fi
 
-alias ce='chezmoi edit --watch'
+#chezmoi aliases
+alias cz='chezmoi'
+alias chap='chezmoi apply && source "$HOME/.bashrc"'
+alias chup='chezmoi update && source "$HOME/.bashrc"'
 
 
 # scripts
