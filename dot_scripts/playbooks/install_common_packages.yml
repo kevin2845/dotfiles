@@ -74,6 +74,7 @@
       - nodejs
       - npm
       - rustup
+      - luarocks
     
 
     flatpak_packages: []
