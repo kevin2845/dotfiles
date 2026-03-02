@@ -4,7 +4,7 @@
 --]]
 
 -- ===========================
--- MOVEMENT & NAVIGATION (ThePrimeagen style)
+-- MOVEMENT & NAVIGATION 
 -- ===========================
 -- Move selected text up/down
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
@@ -16,6 +16,9 @@ vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines and maintain cursor posit
 -- Keep cursor in middle for half page up/down
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
+
+vim.keymap.set("n", "q", "<Nop>")
+vim.keymap.set("n", "q:", "<Nop>")
 
 -- ===========================
 -- EDITING OPERATIONS
