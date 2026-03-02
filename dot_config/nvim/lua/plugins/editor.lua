@@ -60,27 +60,9 @@ return {
 	-- Neorg (Note taking)
 	{
 		"nvim-neorg/neorg",
+        lazy = false,
 		version = "*",
-		build = ":Neorg sync-parsers",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-neorg/lua-utils.nvim",
-			"pysan3/pathlib.nvim",
-			"nvim-neotest/nvim-nio",
-		},
-		opts = {
-			load = {
-				["core.defaults"] = {},
-				["core.concealer"] = {},
-				["core.dirman"] = {
-					config = {
-						workspaces = {
-							notes = "~/notes",
-						},
-					},
-				},
-			},
-		},
+        config = true,
 	},
 
 	-- -- Markdown Preview
