@@ -154,15 +154,17 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper win
 vim.keymap.set("n", "<leader>`", ":DBUIToggle<CR>", { desc = "Database UI" })
 
 -- Git operations (simple terminal commands)
-vim.keymap.set("n", "<leader>gc", function()
+vim.keymap.set("n", "<leader>g", "<cmd>LazyGit<cr>",{ desc = "LazyGit" })
+
+vim.keymap.set("n", "<leader>Gc", function()
 	vim.cmd("terminal git commit")
 end, { desc = "Git commit" })
 
-vim.keymap.set("n", "<leader>gp", function()
+vim.keymap.set("n", "<leader>Gp", function()
 	vim.cmd("terminal git push")
 end, { desc = "Git push" })
 
-vim.keymap.set("n", "<leader>gl", function()
+vim.keymap.set("n", "<leader>Gl", function()
 	vim.cmd("terminal git log --oneline")
 end, { desc = "Git log" })
 
