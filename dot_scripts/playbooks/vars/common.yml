@@ -11,6 +11,7 @@ mapped_packages:
   - pipx
   - yarn
   - iperf3
+  - openssh
 
 package_map:
   netcat:
@@ -109,3 +110,10 @@ package_map:
     Alpine: iperf3
     Darwin: iperf3
 
+  openssh:
+    Alpine: openssh-client
+    Archlinux: openssh
+    Darwin: openssh
+    Debian: openssh-client
+    RedHat: openssh-clients
+    Suse: openssh

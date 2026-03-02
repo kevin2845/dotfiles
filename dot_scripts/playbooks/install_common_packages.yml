@@ -22,6 +22,8 @@
       - vim
       - neovim
       - nano
+      - man
+      - tealdeer
       - htop
       - btop
       - tmux
