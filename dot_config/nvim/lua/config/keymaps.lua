@@ -93,8 +93,6 @@ vim.keymap.set("n", "<leader>Q", "<cmd>q!<CR>", { desc = "Force [Q]uit" })
 -- ===========================
 -- stylua: ignore start
 
-vim.keymap.set("n", "<leader>e", function() Snacks.explorer() end, { desc = "File [E]xplorer" })
-
 
 vim.keymap.set("n", "<leader>sf", function() require("snacks").picker.smart({layout = { preset = "default"}}) end, { desc = "[S]earch [F]iles" })
 vim.keymap.set("n", "<leader>sg", function() require("snacks").picker.grep({layout = { preset = "default"}}) end, { desc = "[S]earch by [G]rep" })
@@ -144,21 +142,7 @@ vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right win
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
--- ===========================
--- MISCELLANEOUS
--- ===========================
 
--- UndoTree Toggle
-vim.keymap.set("n", "<leader>u", "<cmd>UndotreeToggle<CR>", { desc = "[U]ndo tree" })
-
--- GlobalNote Toggle
-vim.keymap.set("n", "<leader>n", "<cmd>GlobalNote<CR>", { desc = "[N]otes" })
-
--- Database UI Toggle
-vim.keymap.set("n", "<leader>`", ":DBUIToggle<CR>", { desc = "Database UI" })
-
--- Autoformatting 
-vim.keymap.set("n", "<leader>=", function() require("conform").format({ async = true, lsp_format = "fallback" }) end, { desc = "Format buffer" })
 
 -- ===========================
 -- COMMENTING OPERATIONS
@@ -203,6 +187,60 @@ end, { desc = "Git push" })
 vim.keymap.set("n", "<leader>Gl", function()
 	vim.cmd("terminal git log --oneline")
 end, { desc = "Git log" })
+
+
+
+-- ===========================
+-- MISCELLANEOUS
+-- ===========================
+
+-- Explorer helper function
+local function close_explorer()
+  local ok, pick = pcall(function()
+    return Snacks.picker.get({ source = "explorer" })
+  end)
+  if not ok or not pick then
+    return
+  end
+
+  for _, p in ipairs(pick) do
+    pcall(function() p:close() end)
+  end
+end
+
+
+-- UndoTree helper function 
+local function close_undotree()
+  -- If an undotree window is open, toggle it off
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.bo[buf].filetype == "undotree" then
+      vim.cmd.UndotreeToggle()
+      return
+    end
+  end
+end
+
+-- UndoTree Toggle
+-- stylua: ignore
+vim.keymap.set("n", "<leader>u", function() close_explorer() vim.cmd.UndotreeToggle() end, { desc = "[U]ndo tree" })
+
+-- Snacks Explorer Toggle
+-- stylua: ignore
+vim.keymap.set("n", "<leader>e", function() close_undotree() require("snacks").explorer() end, { desc = "File [E]xplorer" })
+
+-- GlobalNote Toggle
+vim.keymap.set("n", "<leader>n", "<cmd>GlobalNote<CR>", { desc = "[N]otes" })
+
+-- Database UI Toggle
+-- stylua: ignore
+vim.keymap.set("n", "<leader>D", function() close_explorer() vim.cmd.DBUI() end, { desc = "Dadbod UI" })
+
+-- Autoformatting 
+vim.keymap.set("n", "<leader>=", function() require("conform").format({ async = true, lsp_format = "fallback" }) end, { desc = "Format buffer" })
+
+
+
 
 vim.keymap.set("n", "K", vim.lsp.buf.hover) -- Hover docs
 vim.keymap.set("n", "gd", vim.lsp.buf.definition) -- Go to definition
