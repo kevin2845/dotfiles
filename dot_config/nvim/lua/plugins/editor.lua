@@ -91,6 +91,9 @@ return {
 				replace_netrw = true,
 				trash = true,
 			},
+            notifier = {
+                enabled = true,
+            }
 		},
 	},
 
