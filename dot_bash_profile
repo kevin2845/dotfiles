@@ -2,3 +2,7 @@
 
 export EDITOR='nvim'
 export MANPAGER='nvim +Man!'
+
+if [[ -f ~/.bashrc ]]; then
+	. ~/.bashrc
+fi
