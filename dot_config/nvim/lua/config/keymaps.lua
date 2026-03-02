@@ -96,10 +96,10 @@ vim.keymap.set("n", "<leader>W", "<cmd>w<CR>", { desc = "Save file" })
 vim.keymap.set("n", "<leader>e", function() Snacks.explorer() end, { desc = "File [E]xplorer" })
 
 
-vim.keymap.set("n", "<leader>sf", function() require("snacks").smart() end, { desc = "[S]earch [F]iles" })
-vim.keymap.set("n", "<leader>sg", function() require("snacks").grep() end, { desc = "[S]earch by [G]rep" })
-vim.keymap.set("n", "<leader>sb", function() require("snacks").buffers() end, { desc = "[S]earch [B]uffers" })
-vim.keymap.set("n", "<leader>:", function() require("snacks").command_history() end, { desc = ": Command History" })
+vim.keymap.set("n", "<leader>sf", function() require("snacks").picker.smart() end, { desc = "[S]earch [F]iles" })
+vim.keymap.set("n", "<leader>sg", function() require("snacks").picker.grep() end, { desc = "[S]earch by [G]rep" })
+vim.keymap.set("n", "<leader>sb", function() require("snacks").picker.buffers() end, { desc = "[S]earch [B]uffers" })
+vim.keymap.set("n", "<leader>:", function() require("snacks").picked.command_history() end, { desc = ": Command History" })
 vim.keymap.set("n", "<leader>sk", function() require("snacks").picker.keymaps() end, { desc = "[S]earch [K]eymaps" })
 vim.keymap.set("n", "<leader>sw", function() require("snacks").picker.grep_word() end, { desc = "[S]earch [W]ord" })
 vim.keymap.set("n", "<leader>sc", function() require("chezmoi.pick").snacks() end, { desc = "[S]earch [C]onfig Files" })
@@ -134,7 +134,7 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagn
 -- ===========================
 
 -- Exit terminal mode
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+-- vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
 -- ===========================
 -- SPLIT NAVIGATION (Kickstart defaults - may conflict with tmux-navigator)
