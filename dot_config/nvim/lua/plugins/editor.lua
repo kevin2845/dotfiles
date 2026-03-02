@@ -44,18 +44,13 @@ return {
 	-- UndoTree
 	{
 		"mbbill/undotree",
-		keys = {
-			{ "<leader>u", "<cmd>UndotreeToggle<CR>", desc = "[U]ndo tree" },
-		},
 	},
 
 	-- Global Note
 	{
 		"backdround/global-note.nvim",
 		opts = {},
-		keys = {
-			{ "<leader>n", "<cmd>GlobalNote<CR>", desc = "[N]otes" },
-		},
+
 	},
 
 	-- Comment plugin
@@ -143,7 +138,16 @@ return {
 		priority = 1000,
 		lazy = false,
 		--- @type snakcs.config
-		opts = {},
+		opts = {
+            picker = { 
+                enabled = true 
+            },
+            explorer = {
+                enabled = true,
+                replace_netrw = true, 
+                trash = true,
+            },
+        },
 	},
 	{
 		"EthanJWright/vs-tasks.nvim",

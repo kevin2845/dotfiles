@@ -103,8 +103,8 @@ vim.keymap.set("n", "<leader>:", function() require("snacks").picker.command_his
 vim.keymap.set("n", "<leader>sk", function() require("snacks").picker.keymaps() end, { desc = "[S]earch [K]eymaps" })
 vim.keymap.set("n", "<leader>sw", function() require("snacks").picker.grep_word() end, { desc = "[S]earch [W]ord" })
 vim.keymap.set("n", "<leader>sc", function() require("chezmoi.pick").snacks() end, { desc = "[S]earch [C]onfig Files" })
--- stylua: ignore end
 
+-- stylua: ignore end
 
 -- Buffer fuzzy search
 vim.keymap.set("n", "<leader>f", function()
@@ -120,7 +120,6 @@ vim.keymap.set("n", "<leader>ss", function()
 		title = "Live Grep in Open Files",
 	})
 end, { desc = "[S]earch in Open Files" })
-
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
@@ -151,11 +150,48 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper win
 -- MISCELLANEOUS
 -- ===========================
 
--- Database UI
+-- UndoTree Toggle
+vim.keymap.set("n", "<leader>u", "<cmd>UndotreeToggle<CR>", { desc = "[U]ndo tree" })
+
+-- GlobalNote Toggle
+vim.keymap.set("n", "<leader>n", "<cmd>GlobalNote<CR>", { desc = "[N]otes" })
+
+-- Database UI Toggle
 vim.keymap.set("n", "<leader>`", ":DBUIToggle<CR>", { desc = "Database UI" })
 
--- Git operations (simple terminal commands)
-vim.keymap.set("n", "<leader>g", "<cmd>LazyGit<cr>",{ desc = "LazyGit" })
+
+
+-- ===========================
+-- COMMENTING OPERATIONS
+-- ===========================
+-- Comment Line
+vim.keymap.set("n", "<leader>/", function()
+	require("Comment.api").toggle.linewise.current()
+end, { desc = "Toggle comment line" })
+
+-- Comment Selection
+vim.keymap.set("v", "<leader>/", function()
+	local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+	vim.api.nvim_feedkeys(esc, "nx", false)
+	require("Comment.api").toggle.linewise(vim.fn.visualmode())
+end, { desc = "Toggle comment selection" })
+
+-- Comment Line (Block Comment)
+vim.keymap.set("n", "<leader>?", function()
+	require("Comment.api").toggle.blockwise.current()
+end, { desc = "Toggle block comment" })
+
+-- Comment Selection (Block Comment)
+vim.keymap.set("v", "<leader>?", function()
+	local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+	vim.api.nvim_feedkeys(esc, "nx", false)
+	require("Comment.api").toggle.blockwise(vim.fn.visualmode())
+end, { desc = "Toggle block comment selection" })
+
+-- ===========================
+-- GIT OPERATIONS
+-- ===========================
+vim.keymap.set("n", "<leader>g", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
 
 vim.keymap.set("n", "<leader>Gc", function()
 	vim.cmd("terminal git commit")
