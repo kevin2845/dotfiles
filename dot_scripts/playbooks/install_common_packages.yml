@@ -24,6 +24,7 @@
       - nano
       - man
       - tealdeer
+      - diffutils
       - htop
       - btop
       - tmux
