@@ -84,9 +84,9 @@ vim.keymap.set("n", "<leader>c", "<cmd>bdelete<CR>", { desc = "Close tab" })
 -- FILE OPERATIONS
 -- ===========================
 
-vim.keymap.set("n", "<leader>fs", "<cmd>w<CR>", { desc = "[F]ile [S]ave" })
-vim.keymap.set("n", "<leader>fq", "<cmd>q<CR>", { desc = "[F]ile [Q]uit" })
-vim.keymap.set("n", "<leader>W", "<cmd>w<CR>", { desc = "Save file" })
+vim.keymap.set("n", "<leader>q", "<cmd>q<CR>", { desc = "[Q]uit" })
+vim.keymap.set("n", "<leader>w", "<cmd>w<CR>", { desc = "[W]rite file" })
+vim.keymap.set("n", "<leader>Q", "<cmd>q!<CR>", { desc = "Force [Q]uit" })
 
 -- ===========================
 -- SEARCH & UTILITY
@@ -126,8 +126,6 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 -- vim.keymap.set("n", "<leader>nh", "<cmd>nohlsearch<CR>", { desc = "[N]o [H]ighlight" })
 vim.keymap.set("n", "<leader>H", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
 
--- Diagnostic keymaps
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
 -- ===========================
 -- TERMINAL
@@ -159,7 +157,8 @@ vim.keymap.set("n", "<leader>n", "<cmd>GlobalNote<CR>", { desc = "[N]otes" })
 -- Database UI Toggle
 vim.keymap.set("n", "<leader>`", ":DBUIToggle<CR>", { desc = "Database UI" })
 
-
+-- Autoformatting 
+vim.keymap.set("n", "<leader>=", function() require("conform").format({ async = true, lsp_format = "fallback" }) end, { desc = "Format buffer" })
 
 -- ===========================
 -- COMMENTING OPERATIONS
